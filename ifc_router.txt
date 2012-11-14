@@ -1,4 +1,4 @@
-interface ifc_ (input bit clk);
+interface ifc_router(input bit clk);
   	//control
   	logic rst;
   	
