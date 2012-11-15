@@ -10,7 +10,7 @@ module top;
  // command to generate the VCD dump file that you open with DVE
  initial $vcdpluson;
 
- ifc IFC(clk); // instantiate the interface file
+ ifc_noc IFC(clk); // instantiate the interface file
  noc dut (IFC.noc); 
  tb bench  (IFC.bench);
 

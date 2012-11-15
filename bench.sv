@@ -2,7 +2,7 @@
 
 class noc_transaction;
     rand bit rst;
-    rand logic [15:0][15:0] valid_i;
+    rand logic [15:0] valid_i;
     rand logic [15:0][15:0] data_i;
 
 endclass
@@ -10,10 +10,10 @@ endclass
 					//golden model
 class noc_test;
     bit rst;
-    int valid_i;
-    int data_i;
-    int valid_o;
-    int data_o;
+    logic [15:0] valid_i;
+    logic [15:0][15:0] data_i;
+    logic [15:0] valid_o;
+    logic [15:0][15:0] data_o;
 
     function void golden_result;	//golden result
         
@@ -27,10 +27,14 @@ class noc_test;
         
         data_o = 0;
         valid_o = 0;
-        if (valid_i) begin
-        	$display("Valid data of %d", data_i);
-        	data_o = data_i;
-        	valid_o = 1;
+        for( int i = 0; i < 16; i ++) begin
+        	//$display("Checking index %d with valid:%d and data:%d",
+        	//	i, valid_i[i], data_i[i]);
+        	if (valid_i[i]) begin
+        		//$display("Valid data of index %d: %d", i, data_i[i]);
+        		data_o[i] = data_i;
+        		valid_o[i] = 1;
+        	end
         end
         	
         
@@ -62,7 +66,7 @@ endclass
 
 class noc_env;
     int cycle = 0;
-    int max_transactions = 1;
+    int max_transactions = 10000;
     int warmup_time = 2;
     bit verbose = 1;
     
@@ -94,7 +98,7 @@ class noc_env;
     endfunction
 endclass
 
-program tb (ifc.bench ds);
+program tb (ifc_noc.bench ds);
     noc_test test;
     noc_transaction packet; 
     noc_checker checker;
@@ -125,14 +129,21 @@ program tb (ifc.bench ds);
         test.rst <= 0;
         ds.cb.rst <= 0;
         
-        test.data_i <= packet.data_i & 1'b1;
-        ds.cb.data_i <= packet.data_i & 1'b1;
+        test.data_i <= packet.data_i;
+        ds.cb.data_i <= packet.data_i;
         
-        test.valid_i <=
+        test.valid_i <= packet.valid_i;
+        ds.cb.valid_i <= packet.valid_i;
         
         @(ds.cb);
         test.golden_result();
         
+        for (int i = 0; i < 16; i++) begin
+        	if (test.valid_i[i]) begin
+        		//$display("Sent data to index %d with value %b", 
+        		//	i, test.data_i[i]);
+        	end
+        end
 
     endtask
 
@@ -151,9 +162,13 @@ program tb (ifc.bench ds);
         // testing
         repeat (env.max_transactions) begin
             do_cycle();
-            
+        
+        
+        
             //checker.check_result(1,ds.cb.read_data, test.read_data, env.verbose);
             
         end
+        
+        $display("\n\n----%d cycles completed succesfully ----\n\n", env.cycle);
     end
 endprogram

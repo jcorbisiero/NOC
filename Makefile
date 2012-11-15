@@ -1,6 +1,6 @@
 TOP=top.sv
 #INTERFACE=
-INTERFACE=interface.sv
+INTERFACE=ifc_noc.sv
 BENCH=bench.sv
 DUT=noc.sv 
 

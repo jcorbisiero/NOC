@@ -1,6 +1,6 @@
 module noc
 (
-	ifc.nic n
+	ifc_noc.noc n
 );
 
 

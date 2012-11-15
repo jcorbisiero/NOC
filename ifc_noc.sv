@@ -3,11 +3,11 @@ interface ifc_noc(input bit clk);
   	logic rst;
   	
   	//inputs
-	logic [15:0][15:0] valid_i;
+	logic [15:0] valid_i;
 	logic [15:0][15:0] data_i;
 	
 	//outputs
-	logic [15:0][15:0] valid_o;
+	logic [15:0] valid_o;
 	logic [15:0][15:0] data_o;
 
 	clocking cb @(posedge clk);
@@ -27,7 +27,7 @@ interface ifc_noc(input bit clk);
 		input valid_i,
 		input data_i,
 		
-		output enable_o,
+		output valid_o,
 		output data_o
 	);
 	
