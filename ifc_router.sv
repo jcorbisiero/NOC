@@ -1,4 +1,4 @@
-interface ifc_router(input bit clk);
+interface ifc(input bit clk);
   	//control
   	logic rst;
   	
@@ -24,10 +24,7 @@ interface ifc_router(input bit clk);
 		input credit_o;
   	endclocking
 
-  	modport router (
-  		input clk,
-  		input rst,
-  		
+  	modport router (  		
 		input valid_i,
 		input data_i,
 		input credit_i,
@@ -35,6 +32,11 @@ interface ifc_router(input bit clk);
 		output enable_o,
 		output data_o,
 		output credit_o
+	);
+
+	modport control (
+		input clk;
+		input rst;
 	);
 	
 	modport bench (clocking cb);
