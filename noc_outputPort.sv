@@ -9,7 +9,7 @@ module outputPort(
 );
 
 //how to declare buffer from designware?
-reg [3:0] count;
+reg [2:0] count;
 
 always_comb begin
 	if (rst) begin
