@@ -1,34 +1,42 @@
-interface ifc_noc(input bit clk);
+interface ifc(input bit clk);
   	//control
   	logic rst;
   	
   	//inputs
-	logic [15:0] valid_i;
-	logic [15:0][15:0] data_i;
+	logic valid_i;
+	logic [15:0] data_i;
+	logic credit_i;
 	
 	//outputs
-	logic [15:0] valid_o;
-	logic [15:0][15:0] data_o;
+	logic enable_o;
+	logic [15:0] data_o;
+	logic credit_o;
 
 	clocking cb @(posedge clk);
 		output rst;
 	
     		output valid_i;
     		output data_i;
+    		output credit_i;
     		
-    		input valid_o;
+    		input enable_o;
 		input data_o;
+		input credit_o;
   	endclocking
 
-  	modport noc (
-  		input clk,
-  		input rst,
-  		
+  	modport router (  		
 		input valid_i,
 		input data_i,
+		input credit_i,
 		
-		output valid_o,
-		output data_o
+		output enable_o,
+		output data_o,
+		output credit_o
+	);
+
+	modport control (
+		input clk,
+		input rst
 	);
 	
 	modport bench (clocking cb);

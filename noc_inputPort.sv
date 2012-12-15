@@ -1,45 +1,69 @@
 module inputPort
 (
 	input clk,
-	unput rst,
+	input rst,
+
 	input [15:0] data_i,
 	input write_en,
 	input shift,
+
 	output [15:0] data_o,
-	read_valid_o
+	output reg read_valid_o
 );
 
-//how to declare buffer from designware?
-always_comb begin
-	if (rst)
-		buffer.rst_n = 0;
-	else 
-		buffer.rst_n = 1;
+reg rst_n;
+reg push_n;
+reg pop_n;
+reg empty;
+reg full;
+reg error;
 
-	if (write_en && !buffer.full) begin
-		buffer.data_in = data_i;
-		buffer.push_req_n = 0;
-	else
-		buffer.push_req_n = 1;
+wire almost_empty;
+wire half_full;
+wire almost_full;
+
+DW_fifo_s1_sf#(.width(16), .depth(5), .rst_mode(1))  buffer(
+		.clk, .rst_n, 
+		.push_req_n(push_n), .pop_req_n(pop_n),
+		.data_in(data_i),
+		.empty, .full,
+		.data_out(data_o),
+		.error,
+
+		.diag_n('1), .almost_empty, .half_full, .almost_full
+	);
+
+always_comb begin
+	if (rst) begin
+		rst_n = 0;
+	end else begin
+		rst_n = 1;
 	end
+
+
+	if (write_en && !full) begin
+		push_n = 0;
+	end else begin
+		push_n = 1;
+	end
+
 
 	if (shift) begin
-		assert(!buffer.empty);
+		assert(!empty);
 
-		buffer.pop_req_n = 0;
-	else
-		buffer.pop_req_n = 1;
+		pop_n = 0;
+	end else begin
+		pop_n = 1;
 	end
 
-	if (!buffer.empty) begin
-		data_o = buffer.data_out;
-		read_valid = 1;
-	else 
-		data_o = 0;
-		read_valid = 0;
+
+	if (!empty) begin
+		read_valid_o = 1;
+	end else begin
+		read_valid_o = 0;
 	end
 
-	assert(!buffer.error);
+	assert(!error);
 end
 
 endmodule

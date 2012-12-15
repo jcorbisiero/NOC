@@ -98,7 +98,7 @@ class noc_env;
     endfunction
 endclass
 
-program tb (ifc_noc.bench ds);
+program tb (ifc.bench ds);
     noc_test test;
     noc_transaction packet; 
     noc_checker checker;

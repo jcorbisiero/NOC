@@ -2,11 +2,11 @@ module arbiter(
 	input clk,
 	input rst,
 	
-	output [4:0] N_turn_o,
-	output [4:0] S_turn_o,
-	output [4:0] E_turn_o,
-	output [4:0] W_turn_o,
-	output [4:0] L_turn_o
+	output reg [4:0] N_turn_o,
+	output reg [4:0] S_turn_o,
+	output reg [4:0] E_turn_o,
+	output reg [4:0] W_turn_o,
+	output reg [4:0] L_turn_o
 );
 
 reg [4:0] NTurn;
@@ -25,10 +25,13 @@ end
 
 always_ff @(posedge clk) begin
 	if (rst) begin
-		//TODO:
-		//initialize the Turn registers
+		NTurn <= 01000;
+		STurn <= 00100;
+		ETurn <= 00010;
+		WTurn <= 00001;
+		LTurn <= 10000;	
 	end else begin
-		NTurn  <= NTurn >> 1;
+		NTurn <= NTurn >> 1;
 		if (NTurn == 00000) NTurn <= 10000;
 
 		STurn <= STurn >> 1;
