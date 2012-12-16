@@ -1,4 +1,4 @@
-//`timescale 1ns/1ns
+//		`timescale 1ns/1ns
 
 module top();
 	bit clk = 1;
@@ -16,7 +16,7 @@ module top();
 		IFCW.bench, IFCL.bench, CTRL.bench);
 
 
-	router#(.XCOORD(0100), .YCOORD(0100),
+	router#(.XCOORD(2), .YCOORD(2),
 			.NORTH(1), .SOUTH(1),
 			.EAST(1), .WEST(1)) dut
 	(	IFCN.router, IFCS.router,

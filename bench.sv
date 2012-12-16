@@ -397,8 +397,8 @@ class router_checker;	//checker class
 	
 	Constants c;
 	
-	function check_results(int data_o, int enable_o, int value, int dir);
-		return;
+	function void check_results(int data_o, int enable_o, int value, int dir);
+		
 		if( enable_o || value != -1 ) begin
 			$display("%d DUT Data_o: %d, enable_o: %d",
 				dir, data_o, enable_o);
@@ -583,6 +583,7 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 		ctrl_ds.cb.rst <= 1;
         
         	@(ctrl_ds.cb);
+
         	test.golden_result(0);
 	
 	endtask
@@ -616,7 +617,7 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 		end
 		else begin
 			$display("NO VALID INPUT PORT FOR %d", input_port);
-end
+		end
 	endtask
 
     task do_cycle;
@@ -661,6 +662,7 @@ end
         end 
         
         @(ctrl_ds.cb);
+
         
         test.golden_result(header);
         
@@ -692,12 +694,14 @@ end
         
         	$display("------------------------------------------");
         	$display("CHECKING");
-		//$display("%b %b", n_ds.cb.data_o, n_ds.cb.enable_o);
-		//checker.check_results(n_ds.cb.data_o, n_ds.cb.enable_o, test.outputs[c.NORTH -1], c.NORTH);
-		//checker.check_result(s_ds.cb.data_o, s_ds.cb.enable_o, test.outputs[c.SOUTH -1], c.SOUTH);
+        	if( env.cycle >= 4 ) begin
+			$display("%b", s_ds.cb.data_o);
+			//checker.check_results(n_ds.cb.data_o, n_ds.cb.enable_o, test.outputs[c.NORTH -1], c.NORTH);
+			//checker.check_results(s_ds.cb.data_o, s_ds.cb.enable_o, test.outputs[c.SOUTH -1], c.SOUTH);
 		//checker.check_result(e_ds.cb.data_o, e_ds.cb.enable_o, test.outputs[c.EAST -1], c.EAST);
 		//checker.check_result(w_ds.cb.data_o, w_ds.cb.enable_o, test.outputs[c.WEST -1], c.WEST);
 		//checker.check_result(l_ds.cb.data_o, l_ds.cb.enable_o, test.outputs[c.LOCAL -1], c.LOCAL);
+		end
 		$display("--------------------------------------");
         end
         
