@@ -12,7 +12,8 @@ module top();
 	ifc IFCW(clk);
 	ifc IFCL(clk);
 	ifc CTRL(clk);
-	tb bench (IFCL.bench);
+	tb bench (IFCN.bench, IFCS.bench, IFCE.bench, 
+		IFCW.bench, IFCL.bench, CTRL.bench);
 
 
 	router#(.XCOORD(0100), .YCOORD(0100),
