@@ -17,20 +17,6 @@ class Constants;
     	
 endclass	
 
-class router_transaction;
-    rand bit rst;
-    
-    rand int input_port;
-    rand logic [3:0] x;
-    rand logic [3:0] y;
-    
-    constraint in_val { input_port >= 1 && input_port <= 5; }
-    constraint x_val { x == 4'b1000 || x == 4'b0100 || x == 4'b0010 || x == 4'b0001 || 4 == 5'b0000; }
-    constraint y_val { y == 4'b1000 || y == 4'b0100 || y == 4'b0010 || y == 4'b0001 || 4 == 5'b0000; }
-    
-
-endclass
-
 class arbiter;
 	
 	Constants c;
@@ -213,19 +199,19 @@ class router_test;
 	endfunction
 	
 	function void clear_input();
-		inputs[0] = 0;
-		inputs[1] = 0;
-		inputs[2] = 0;
-		inputs[3] = 0;
-		inputs[4] = 0;
+		inputs[0] = -1;
+		inputs[1] = -1;
+		inputs[2] = -1;
+		inputs[3] = -1;
+		inputs[4] = -1;
 	endfunction
 	
 	function void clear_output();
-		outputs[0] = 0;
-		outputs[1] = 0;
-		outputs[2] = 0;
-		outputs[3] = 0;
-		outputs[4] = 0;
+		outputs[0] = -1;
+		outputs[1] = -1;
+		outputs[2] = -1;
+		outputs[3] = -1;
+		outputs[4] = -1;
 	endfunction
 	
 	function void reset_credits();
@@ -366,7 +352,7 @@ class router_test;
 	endfunction
 
 	//golden result
-	function void golden_result(int inputPort, logic [15:0] header);
+	function void golden_result(logic [15:0] header);
 
 		if (rst) begin
 			reset();
@@ -374,19 +360,19 @@ class router_test;
 			return;
 		end
 		
-		if( inputs[c.NORTH - 1] ) begin
+		if( inputs[c.NORTH - 1] != -1 ) begin
 			handle_input(c.NORTH, header);
 		end
-		if( inputs[c.SOUTH - 1] ) begin
+		if( inputs[c.SOUTH - 1] != -1 ) begin
 			handle_input(c.SOUTH, header);
 		end
-		if( inputs[c.EAST - 1] ) begin
+		if( inputs[c.EAST - 1] != -1) begin
 			handle_input(c.EAST, header);
 		end
-		if( inputs[c.WEST - 1] ) begin
+		if( inputs[c.WEST - 1] != -1) begin
 			handle_input(c.WEST, header);
 		end
-		if( inputs[c.LOCAL - 1] ) begin
+		if( inputs[c.LOCAL - 1] != -1) begin
 			handle_input(c.LOCAL, header);
         	end
         	
@@ -407,25 +393,19 @@ class router_test;
     endfunction
 endclass
 
-class router_checker;								//checker class
-    function bit check_result (int op,int dut_value, int bench_value, bit verbose); 
-        
-        bit passed = (dut_value == bench_value);
-        
-        if(verbose) $display("dut_value: %d", dut_value);
-        
-        if(passed) begin
-            if(verbose) $display("%t : pass %d\n", $realtime, op);
-        end
-        else begin
-            $display("%t : fail %d\n", $realtime, op);
-            $display("dut value: %d", dut_value);
-            $display("bench value: %d", bench_value);
-            $display("Operation: %d", op);
-            $exit();
-        end
-        return passed;
-    endfunction  
+class router_checker;	//checker class
+	
+	Constants c;
+	
+	function check_results(int data_o, int enable_o, int value, int dir);
+		return;
+		if( enable_o || value != -1 ) begin
+			$display("%d DUT Data_o: %d, enable_o: %d",
+				dir, data_o, enable_o);
+			$display("%d TST Data_o: %d",
+				dir, value);
+		end
+	endfunction  
 endclass
 
 class router_env;
@@ -434,15 +414,22 @@ class router_env;
     int warmup_time = 2;
     bit verbose = 1;
     
-    int reset_density = 1;
-    int read_density = 1;
-    int write_density = 1;
-    int search_density = 1;
+    real reset_density = 0.0;
     
-    int read_index_mask = 5'h1F;
-    int write_index_mask = 5'h1F;
-    int write_data_mask = 5'h1F;
-    int search_data_mask = 5'h1F;
+    int XCOORD=2;
+    int YCOORD=2;
+    
+    bit use_input1 [4:0];
+    bit use_input2 [4:0];
+    bit use_input3 [4:0];
+    bit use_input4 [4:0];
+    bit use_input5 [4:0];
+    
+    bit input1_active = 1;
+    bit input2_active = 0;
+    bit input3_active = 0;
+    bit input4_active = 0;
+    bit input5_active = 0;
 
     function configure(string filename);
         int file, value, seed, chars_returned;
@@ -457,9 +444,118 @@ class router_env;
             else if("TRANSACTIONS" == param) begin
                 max_transactions = value;
             end
-            
+            else if("XCOORD" == param) begin
+            	this.XCOORD = value;
+            end
+            else if("YCOORD" == param) begin
+	        this.YCOORD = value;
+            end
+            else if("RESET_DENSITY" == param) begin
+            	this.reset_density = value;
+            end
+            else if("INPUT1" == param) begin
+            	$display("In input1");
+            	if( value == 1 ) input1_active = 1; 
+            	chars_returned = $fscanf(file, "%d %d %d %d %d", 
+            		use_input1[0], use_input1[1], use_input1[2], use_input1[3], use_input1[4]);
+            	$display("%d %d %d %d %d", 
+            		use_input1[0], use_input1[1], use_input1[2], use_input1[3], use_input1[4]);
+            end
+            else if("INPUT2" == param) begin
+		$display("In input2");
+		if( value == 1 ) input2_active = 1; 
+		chars_returned = $fscanf(file, "%d %d %d %d %d", 
+			use_input2[0], use_input2[1], use_input2[2], use_input2[3], use_input2[4]);
+		$display("%d %d %d %d", 
+			use_input2[0], use_input2[1], use_input2[2], use_input2[3], use_input2[4]);
+            end
+            else if("INPUT3" == param) begin
+		$display("In input3");
+		if( value == 1 ) input3_active = 1; 
+		chars_returned = $fscanf(file, "%d %d %d %d %d", 
+			use_input3[0], use_input3[1], use_input3[2], use_input3[3], use_input3[4]);
+    	    end
+    	    else if("INPUT4" == param) begin
+		$display("In input4");
+		if( value == 1 ) input4_active = 1; 
+		chars_returned = $fscanf(file, "%d %d %d %d %d", 
+			use_input4[0], use_input4[1], use_input4[2], use_input4[3], use_input4[4]);
+    	    end
+    	    else if("INPUT5" == param) begin
+		$display("In input5");
+		if( value == 1 ) input5_active = 1; 
+		chars_returned = $fscanf(file, "%d %d %d %d %d", 
+		use_input5[0], use_input5[1], use_input5[2], use_input5[3], use_input5[4]);
+	    end
         end
     endfunction
+endclass
+
+
+class router_transaction;
+
+	router_env env;
+
+    	rand int rst;
+    
+	/*Packet enters into router here*/
+	rand int input_port1;
+	rand int input_port2;
+	rand int input_port3;
+	rand int input_port4;
+	rand int input_port5;
+
+	/* Destination address of packet*/
+	rand logic [3:0] x;
+	rand logic [3:0] y;
+    
+	function new(router_env env);
+		this.env = env;
+	endfunction
+
+	function void pre_randomize();
+		if( !env.input1_active ) in1_val.constraint_mode(0);
+		if( !env.input2_active ) in2_val.constraint_mode(0);
+		if( !env.input3_active ) in3_val.constraint_mode(0);
+		if( !env.input4_active ) in4_val.constraint_mode(0);
+		if( !env.input5_active ) in5_val.constraint_mode(0);
+	endfunction
+
+	constraint rst_val { rst >= 0 && rst <= 10; }
+	constraint in1_val { (env.use_input1[0] && input_port1 == 1) ||  
+			(env.use_input1[1] && input_port1 == 2) ||
+			(env.use_input1[2] && input_port1 == 3) ||
+			(env.use_input1[3] && input_port1 == 4) ||
+			(env.use_input1[4] && input_port1 == 5);
+			}
+	constraint in2_val { (env.use_input2[0] && input_port2 == 1) ||  
+			(env.use_input2[1] && input_port2 == 2) ||
+			(env.use_input2[2] && input_port2 == 3) ||
+			(env.use_input2[3] && input_port2 == 4) ||
+			(env.use_input2[4] && input_port2 == 5);
+			}
+	constraint in3_val { (env.use_input3[0] && input_port3 == 1) ||  
+			(env.use_input3[1] && input_port3 == 2) ||
+			(env.use_input3[2] && input_port3 == 3) ||
+			(env.use_input3[3] && input_port3 == 4) ||
+			(env.use_input3[4] && input_port3 == 5);
+			}
+	constraint in4_val { (env.use_input4[0] && input_port4 == 1) ||  
+			(env.use_input4[1] && input_port4 == 2) ||
+			(env.use_input4[2] && input_port4 == 3) ||
+			(env.use_input4[3] && input_port4 == 4) ||
+			(env.use_input4[4] && input_port4 == 5);
+			}
+	constraint in5_val { (env.use_input5[0] && input_port5 == 1) ||  
+			(env.use_input5[1] && input_port5 == 2) ||
+			(env.use_input5[2] && input_port5 == 3) ||
+			(env.use_input5[3] && input_port5 == 4) ||
+			(env.use_input5[4] && input_port5 == 5);
+			}
+	constraint x_val { x == 4'b1000 || x == 4'b0100 || x == 4'b0010 || x == 4'b0001; }
+	constraint y_val { y == 4'b1000 || y == 4'b0100 || y == 4'b0010 || y == 4'b0001; }
+
+
 endclass
 
 program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
@@ -480,65 +576,93 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 	
 		env.cycle++;
 	        cycle = env.cycle;
-	        packet = new();
+	        packet = new(env);
         	packet.randomize();
         	
         	test.rst <= 1;
 		ctrl_ds.cb.rst <= 1;
         
         	@(ctrl_ds.cb);
-        	test.golden_result(0,0);
+        	test.golden_result(0);
 	
+	endtask
+	
+	task activate_message(int input_port, logic [15:0] header);
+
+		if( input_port == c.NORTH ) begin
+			n_ds.cb.valid_i <= 1;
+			n_ds.cb.data_i <= header;
+			test.inputs[c.NORTH - 1] = header;
+		end
+		else if( input_port == c.SOUTH ) begin
+			s_ds.cb.valid_i <= 1;
+			s_ds.cb.data_i <= header;
+			test.inputs[c.SOUTH - 1] = header;
+		end
+		else if( input_port == c.EAST ) begin
+			e_ds.cb.valid_i <= 1;
+			e_ds.cb.data_i <= header;
+			test.inputs[c.EAST - 1] = header;
+		end
+		else if( input_port == c.WEST ) begin
+			w_ds.cb.valid_i <= 1;
+			w_ds.cb.data_i <= header;
+			test.inputs[c.WEST - 1] = header;
+		end
+		else if( input_port == c.LOCAL ) begin
+			l_ds.cb.valid_i <= 1;
+			l_ds.cb.data_i <= header;
+			test.inputs[c.LOCAL - 1] = header;
+		end
+		else begin
+			$display("NO VALID INPUT PORT FOR %d", input_port);
+end
 	endtask
 
     task do_cycle;
         env.cycle++;
         cycle = env.cycle;
-        packet = new();
+        packet = new(env);
         packet.randomize();
         
         test.clear_input();
         test.clear_output();
         
-        test.rst <= 0;
-        ctrl_ds.cb.rst <= 0;
-        $display("\n------------------------------------");
-        $display("After randomize -  InputPort:%d, X:%d, Y:%d",
-        	packet.input_port,packet.x,packet.y);
+        test.rst 	<= (packet.rst < 10*env.reset_density);
+        ctrl_ds.cb.rst 	<= (packet.rst < 10*env.reset_density);
         
         header = { 8'b00000000 , packet.x, packet.y };
         
-        $display("Header: %b", header);
+        $display("\n------------------------------------");
+	$display("After randomize - X:%d, Y:%d Rst:%d Reset_Density:%f",
+		packet.x,packet.y,packet.rst,env.reset_density);
+
+	$display("Header: %b", header);
         
-        if( packet.input_port == c.NORTH ) begin
-        	n_ds.cb.valid_i <= 1;
-        	n_ds.cb.data_i <= header;
-        	test.inputs[c.NORTH - 1] = header;
-        end
-        else if( packet.input_port == c.SOUTH ) begin
-        	s_ds.cb.valid_i <= 1;
-        	s_ds.cb.data_i <= header;
-        	test.inputs[c.SOUTH - 1] = header;
-        end
-        else if( packet.input_port == c.EAST ) begin
-		e_ds.cb.valid_i <= 1;
-		e_ds.cb.data_i <= header;
-		test.inputs[c.EAST - 1] = header;
-        end
-        else if( packet.input_port == c.WEST ) begin
-		w_ds.cb.valid_i <= 1;
-		w_ds.cb.data_i <= header;
-		test.inputs[c.WEST - 1] = header;
-        end
-        else if( packet.input_port == c.LOCAL ) begin
-		l_ds.cb.valid_i <= 1;
-		l_ds.cb.data_i <= header;
-		test.inputs[c.LOCAL - 1] = header;
-        end
+        if( env.input1_active ) begin
+        	$display("Activating port 1");
+        	activate_message(packet.input_port1,header);
+        end 
+        if( env.input2_active ) begin
+        	$display("Activating port 2");
+	        activate_message(packet.input_port2,header);
+        end 
+        if( env.input3_active ) begin
+        	$display("Activating port 3");
+	        activate_message(packet.input_port3,header);
+        end 
+        if( env.input4_active ) begin
+        	$display("Activating port 4");
+	        activate_message(packet.input_port4,header);
+        end 
+        if( env.input5_active ) begin
+        	$display("Activating port 5");
+	        activate_message(packet.input_port5,header);
+        end 
         
         @(ctrl_ds.cb);
         
-        test.golden_result(packet.input_port,header);
+        test.golden_result(header);
         
         test.print_outputs();
 
@@ -547,12 +671,12 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
     initial begin
         test = new();
         checker = new();
-        packet = new();
         env = new();
-        //env.configure("config.txt");
+        env.configure("env.txt");
+        packet = new(env);
         
-        test.XCOORD = 2;
-        test.YCOORD = 2;
+        test.XCOORD = env.XCOORD;
+        test.YCOORD = env.YCOORD;
         
         $display("Starting validation with router at [%d,%d]",
         	test.XCOORD, test.YCOORD);
@@ -566,10 +690,15 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         repeat (env.max_transactions) begin
             do_cycle();
         
-        
-        
-            //checker.check_result(1,ds.cb.read_data, test.read_data, env.verbose);
-            
+        	$display("------------------------------------------");
+        	$display("CHECKING");
+		//$display("%b %b", n_ds.cb.data_o, n_ds.cb.enable_o);
+		//checker.check_results(n_ds.cb.data_o, n_ds.cb.enable_o, test.outputs[c.NORTH -1], c.NORTH);
+		//checker.check_result(s_ds.cb.data_o, s_ds.cb.enable_o, test.outputs[c.SOUTH -1], c.SOUTH);
+		//checker.check_result(e_ds.cb.data_o, e_ds.cb.enable_o, test.outputs[c.EAST -1], c.EAST);
+		//checker.check_result(w_ds.cb.data_o, w_ds.cb.enable_o, test.outputs[c.WEST -1], c.WEST);
+		//checker.check_result(l_ds.cb.data_o, l_ds.cb.enable_o, test.outputs[c.LOCAL -1], c.LOCAL);
+		$display("--------------------------------------");
         end
         
         $display("\n\n----%d cycles completed succesfully ----\n\n", env.cycle);
