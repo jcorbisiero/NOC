@@ -18,9 +18,9 @@ interface ifc(input bit clk);
     		output valid_i;
     		output data_i;
     		output credit_i;
-    		
+
+		input data_o;    		
     		input enable_o;
-		input data_o;
 		input credit_o;
   	endclocking
 
