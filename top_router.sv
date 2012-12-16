@@ -11,6 +11,7 @@ module top();
 	ifc IFCE(clk);
 	ifc IFCW(clk);
 	ifc IFCL(clk);
+	ifc CTRL(clk);
 	tb bench (IFCL.bench);
 
 
@@ -19,7 +20,7 @@ module top();
 			.EAST(1), .WEST(1)) dut
 	(	IFCN.router, IFCS.router,
 		IFCE.router, IFCW.router, 
-		IFCL.router, IFC.control
+		IFCL.router, CTRL.control
 	);
 
 endmodule
