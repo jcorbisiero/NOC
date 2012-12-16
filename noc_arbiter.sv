@@ -25,29 +25,29 @@ end
 
 always_ff @(posedge clk) begin
 	if (rst) begin
-		NTurn <= 01000;
-		STurn <= 00100;
-		ETurn <= 00010;
-		WTurn <= 00001;
-		LTurn <= 10000;	
+		NTurn <= 5'b01000;
+		STurn <= 5'b00100;
+		ETurn <= 5'b00010;
+		WTurn <= 5'b00001;
+		LTurn <= 5'b10000;	
 	end else begin
 		NTurn <= NTurn >> 1;
-		if (NTurn == 00000) NTurn <= 010000;
+		if (NTurn == 5'b00000) NTurn <= 5'b010000;
 
 		STurn <= STurn >> 1;
-		if (STurn == 01000) STurn <= STurn >> 1;
-		else if (STurn == 00000) STurn <= 10000;
+		if (STurn == 5'b01000) STurn <= STurn >> 1;
+		else if (STurn == 5'b00000) STurn <= 5'b10000;
 
 		ETurn <= ETurn >> 1;
-		if (ETurn == 00100) ETurn <= ETurn >> 1;
-		else if (ETurn == 00000) ETurn <= 10000;
+		if (ETurn == 5'b00100) ETurn <= ETurn >> 1;
+		else if (ETurn == 5'b00000) ETurn <= 5'b10000;
 
 		WTurn <= WTurn >> 1;
-		if (WTurn == 00010) WTurn <= WTurn >> 1;
-		else if (WTurn == 00000) WTurn <= 10000;
+		if (WTurn == 5'b00010) WTurn <= WTurn >> 1;
+		else if (WTurn == 5'b00000) WTurn <= 5'b10000;
 
 		LTurn <= LTurn >> 1;
-		if (LTurn == 00001) LTurn <= 10000;
+		if (LTurn == 5'b00001) LTurn <= 5'b10000;
 	end
 end
 

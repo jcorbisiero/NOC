@@ -58,9 +58,16 @@ always_comb begin
 		//assert(OneHot(N_data_i[7:4]));
 		
 		assert(!(N_data_i[3:0] < YCOORD));
+	       $display("Ndata x: %b", N_data_i[7:4]);
+	       $display("Ndata y: %b", N_data_i[3:0]);
+	       $display("Xcoord: %b", XCOORD);
+	       $display("Ycoord: %b", YCOORD);
+
+
+
 
 		if (N_data_i[3:0] > YCOORD) begin
-			if (!S_port_full && (S_turn == 10000)) begin
+			if (!S_port_full && (S_turn == 5'b10000)) begin
 				S_port_select = 000;
 				N_port_remove = 1;
 				S_port_enable = 1;
@@ -69,20 +76,20 @@ always_comb begin
 
 		end else begin
 			if (N_data_i[7:4] > XCOORD) begin
-				if (!E_port_full && (E_turn == 10000)) begin
+				if (!E_port_full && (E_turn == 5'b10000)) begin
 					E_port_select = 000;
 					N_port_remove = 1;
 					E_port_enable = 1;
 					N_credit_inc = 1;
 				end
 			end else if (N_data_i[7:4] < XCOORD) begin
-				if (!W_port_full && (W_turn == 10000)) begin
+				if (!W_port_full && (W_turn == 5'b10000)) begin
 					W_port_select = 000;
 					N_port_remove = 1;
 					W_port_enable = 1;
 					N_credit_inc = 1;
 				end
-			end else if (!L_port_full && (L_turn == 10000)) begin
+			end else if (!L_port_full && (L_turn == 5'b10000)) begin
 				L_port_select = 000;
 				N_port_remove = 1;
 				L_port_enable = 1;
@@ -96,9 +103,13 @@ always_comb begin
 		//assert(OneHot(S_data_i[7:4]));
 
 		assert(!(S_data_i[3:0] > YCOORD));
+ 		$display("Sdata x: %b", S_data_i[7:4]);
+	       $display("Sdata y: %b", S_data_i[3:0]);
+	       $display("Xcoord: %b", XCOORD);
+	       $display("Ycoord: %b", YCOORD);
 
 		if (S_data_i[3:0] < YCOORD) begin
-			if (!N_port_full && (N_turn == 01000)) begin	
+			if (!N_port_full && (N_turn == 5'b01000)) begin	
 				N_port_select = 001;
 				S_port_remove = 1;
 				N_port_enable = 1;
@@ -106,20 +117,20 @@ always_comb begin
 			end
 		end else begin
 			if (S_data_i[7:4] > XCOORD) begin
-				if (!E_port_full && (E_turn == 01000)) begin
+				if (!E_port_full && (E_turn == 5'b01000)) begin
 					E_port_select = 001;
 					S_port_remove = 1;
 					E_port_enable = 1;
 					S_credit_inc = 1;
 				end
 			end else if (S_data_i[7:4] < XCOORD) begin
-				if (!W_port_full && (W_turn == 01000)) begin
+				if (!W_port_full && (W_turn == 5'b01000)) begin
 					W_port_select = 001;
 					S_port_remove = 1;
 					W_port_enable = 1;
 					S_credit_inc = 1;
 				end
-			end else if (!L_port_full && (L_turn == 01000)) begin
+			end else if (!L_port_full && (L_turn == 5'b01000)) begin
 				L_port_select = 001;
 				S_port_remove = 1;
 				L_port_enable = 1;
@@ -134,15 +145,19 @@ always_comb begin
 
 		assert(E_data_i[3:0] == YCOORD);
 		assert(!(E_data_i[7:4] > XCOORD));
+ 		$display("Edata x: %b", E_data_i[7:4]);
+	       $display("Edata y: %b", E_data_i[3:0]);
+	       $display("Xcoord: %b", XCOORD);
+	       $display("Ycoord: %b", YCOORD);
 
 		if (E_data_i[7:4] < XCOORD) begin
-			if (!W_port_full && (W_turn == 00100)) begin
+			if (!W_port_full && (W_turn == 5'b00100)) begin
 				W_port_select = 010;
 				E_port_remove = 1;
 				W_port_enable = 1;
 				E_credit_inc = 1;
 			end
-		end else if (!L_port_full && (L_turn == 00100)) begin
+		end else if (!L_port_full && (L_turn == 5'b00100)) begin
 			L_port_select = 001;
 			E_port_remove = 1;
 			L_port_enable = 1;
@@ -153,18 +168,22 @@ always_comb begin
 	if(W_valid_i) begin
 		//assert(OneHot(W_data_i[3:0]));
 		//assert(OneHot(W_data_i[7:4]));
+ 		$display("Wdata x: %b", W_data_i[7:4]);
+	       $display("Wdata y: %b", W_data_i[3:0]);
+	       $display("Xcoord: %b", XCOORD);
+	       $display("Ycoord: %b", YCOORD);
 
 		assert(W_data_i[3:0] == YCOORD);
 		assert(!(W_data_i[7:4] < XCOORD));
 
 		if (W_data_i[7:4] > XCOORD) begin
-			if ((!E_port_full) && (E_turn == 00010)) begin
+			if ((!E_port_full) && (E_turn == 5'b00010)) begin
 				E_port_select = 011;
 				W_port_remove = 1;
 				E_port_enable = 1;
 				W_credit_inc = 1;
 			end
-		end else if (!L_port_full && (L_turn == 00010)) begin
+		end else if (!L_port_full && (L_turn == 5'b00010)) begin
 			L_port_select = 011;
 			W_port_remove = 1;
 			L_port_enable = 1;
@@ -172,22 +191,27 @@ always_comb begin
 		end
 	end
 
+
 	if(L_valid_i) begin
 		//assert(OneHot(L_data_i[3:0]));
 		//assert(OneHot(L_data_i[7:4]));
 
 		assert(!((L_data_i[3:0] == YCOORD) 
 			&& (L_data_i[7:4] == XCOORD)));
+ 		$display("Ldata x: %b", L_data_i[7:4]);
+	       $display("Ldata y: %b", L_data_i[3:0]);
+	       $display("Xcoord: %b", XCOORD);
+	       $display("Ycoord: %b", YCOORD);
 
 		if (L_data_i[3:0] > YCOORD) begin
-			if (!S_port_full && (S_turn == 00001)) begin	
+			if (!S_port_full && (S_turn == 5'b00001)) begin	
 				S_port_select = 000;
 				L_port_remove = 1;
 				S_port_enable = 1;
 				L_credit_inc = 1;
 			end
 		end else if (L_data_i[3:0] < YCOORD) begin
-			if (!N_port_full && (N_turn == 00001)) begin
+			if (!N_port_full && (N_turn == 5'b00001)) begin
 				N_port_select = 100;
 				L_port_remove = 1;
 				N_port_enable = 1;
@@ -195,14 +219,14 @@ always_comb begin
 			end
 		end else begin
 			if (L_data_i[7:4] > XCOORD) begin
-				if (!E_port_full && (E_turn == 00001)) begin
+				if (!E_port_full && (E_turn == 5'b00001)) begin
 					E_port_select = 100;
 					L_port_remove = 1;
 					E_port_enable = 1;
 					L_credit_inc = 1;
 				end
 			end else if (L_data_i[7:4] < XCOORD) begin
-				if (!W_port_full && (W_turn == 00001)) begin
+				if (!W_port_full && (W_turn == 5'b00001)) begin
 					W_port_select = 100;
 					L_port_remove = 1;
 					W_port_enable = 1;

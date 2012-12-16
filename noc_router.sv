@@ -205,7 +205,7 @@ routeLogic#(.XCOORD(XCOORD), .YCOORD(YCOORD)) route
 
 //Arbiter
 arbiter arb(.clk(control.clk), 
-	.rst(control.clk),
+	.rst(control.rst),
 	.N_turn_o(N_turn),
 	.S_turn_o(S_turn),
 	.E_turn_o(E_turn),
