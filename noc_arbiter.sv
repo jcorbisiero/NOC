@@ -32,7 +32,7 @@ always_ff @(posedge clk) begin
 		LTurn <= 10000;	
 	end else begin
 		NTurn <= NTurn >> 1;
-		if (NTurn == 00000) NTurn <= 10000;
+		if (NTurn == 00000) NTurn <= 010000;
 
 		STurn <= STurn >> 1;
 		if (STurn == 01000) STurn <= STurn >> 1;
