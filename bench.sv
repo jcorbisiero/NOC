@@ -6,7 +6,7 @@ class Constants;
 	static const int WEST	= 4;
 	static const int LOCAL 	= 5;
 	
-	static int BITMASKS [4:0] = {
+	static int BITMASKS [0:4] = {
 				5'b10000, /*North*/
 				5'b01000, /*South*/
 				5'b00100, /*East*/
@@ -57,8 +57,8 @@ class arbiter;
 	function int is_turn(int inputPort, int outputPort);
 		
 		/*Get bitmask for proper port*/
-		bitmask = get_bitmask(inputPort);
-	
+		bitmask = c.BITMASKS[inputPort - 1];
+		
 		/* Check if the inputPorts turn */
 		if( turns[outputPort - 1] & bitmask) begin
 			return 1;
@@ -68,8 +68,29 @@ class arbiter;
 		
 	endfunction
 	
-	function get_bitmask(int inputPort);
-		return c.BITMASKS[inputPort - 1];
+	function advance();
+		/*North*/
+		turns[0] = turns[0] >> 1;
+		if( turns[0] == 5'b00000) turns[0] = 5'b01000;
+		
+		/*South*/
+		turns[1] = turns[1] >> 1;
+		if( turns[1] == 5'b01000) turns[1] = 5'b00100;
+		else if (turns[1] == 5'b00000) turns[1] = 5'b10000;
+		
+		/*East*/
+		turns[2] = turns[2] >> 1;
+		if( turns[2] == 5'b00100) turns[2] = 5'b00010;
+		else if (turns[2] == 5'b00000) turns[2] = 5'b10000;
+		
+		/*West*/
+		turns[3] = turns[3] >> 1;
+		if( turns[3] == 5'b00010) turns[3] = 5'b00001;
+		else if (turns[3] == 5'b00000) turns[3] = 5'b10000;
+		
+		/*Local*/
+		turns[4] = turns[4] >> 1;
+		if( turns[4] == 5'b0001) turns[4] = 5'b10000;
 	endfunction
 
 endclass
@@ -85,13 +106,16 @@ class buffer;
 	string name;
 	int dir;
 	
+	/*Temp variable*/
+	int data;
+	
 	function new(int dir, string name);
 		this.dir = dir;
 		this.name = name;
 	endfunction
 	
 	function int push(int data);
-		if( index == BUFF_SIZE ) begin
+		if( isFull() ) begin
 			return -1;
 		end
 		buff[index] = data;
@@ -99,16 +123,29 @@ class buffer;
 	endfunction
 	
 	function int pop();
-		if( index == 0 )begin
+		if( isEmpty() )begin
 			return -1;
 		end
 		index = index - 1;
-		return buff[index];
+		data = buff[0];
+		for(int i = 1; i < BUFF_SIZE; i++) begin
+			buff[ i - 1 ] = buff[i];
+		end
+		return data;
+	endfunction
+	
+	function int peek();
+		if( isEmpty() )begin
+			return -1;
+		end
+		return buff[0];
 	endfunction
 	
 	function void clear();
 		index = 0;
-		buff[index] = 0;
+		for(int i = 0; i < BUFF_SIZE; i++) begin
+			buff[ i ] = 0;
+		end
 	endfunction
 	
 	function int isFull();
@@ -141,10 +178,12 @@ class router_test;
 	buffer L_output_buff	= new(c.LOCAL, 	"L OUTPUT");
 	int credits [4:0];
 	int outputs [4:0];
+	int inputs  [4:0];
 	
 	/* Temporaray variables */
 	buffer input_buff;
 	buffer output_buff;
+	logic [15:0] header;
 	int dir_to_send;
 	int is_turn;
 	
@@ -173,12 +212,20 @@ class router_test;
 		return;
 	endfunction
 	
+	function void clear_input();
+		inputs[0] = 0;
+		inputs[1] = 0;
+		inputs[2] = 0;
+		inputs[3] = 0;
+		inputs[4] = 0;
+	endfunction
+	
 	function void clear_output();
-		outputs[0] = -1;
-		outputs[1] = -1;
-		outputs[2] = -1;
-		outputs[3] = -1;
-		outputs[4] = -1;
+		outputs[0] = 0;
+		outputs[1] = 0;
+		outputs[2] = 0;
+		outputs[3] = 0;
+		outputs[4] = 0;
 	endfunction
 	
 	function void reset_credits();
@@ -238,34 +285,27 @@ class router_test;
 			$exit();
 		end
 	endfunction
-
-	//golden result
-	function void golden_result(int inputPort, logic [15:0] header);
-
-		if (rst) begin
-			reset();
-			$display("Resetting golden model");
-			return;
-		end
-
-		/* Check if input buffer is full and push */
+	
+	function void advance_inputPort(int inputPort);
+		
 		input_buff = get_input_buffer(inputPort);
 		assert( input_buff.dir == inputPort );
-		if( input_buff.isFull() ) begin
-			$display("INPUT BUFFER is full for %s. Returning",
+		if( input_buff.isEmpty() ) begin
+			$display("INPUT BUFFER was empty for %s. Returning",
 				input_buff.name);
 			return;
 		end		
-		input_buff.push(header);
 		
+		header = input_buff.peek();
 		
 		/* Get output buffer */
 		output_buff = get_output_buffer(header);
-		
+
 		/* Begin error checking and full check */
 		if( output_buff.dir == inputPort ) begin
 			$display("OUTPUT BUFFER is the same as INPUT PORT -- %s. Returning",
 				output_buff.name);
+			output_buff.pop();
 			return;
 		end
 		if( output_buff.isFull() ) begin
@@ -273,22 +313,23 @@ class router_test;
 					output_buff.name);
 			return;
 		end
-		
-		
+
+
 		/*Check arbiter */
 		is_turn = arbiter.is_turn(input_buff.dir, output_buff.dir);
-		$display("IS_TURN: %d. 	IP: %d	OP: %d",
-			is_turn, input_buff.dir, output_buff.dir);
+		$display("Checking: %s. Sending to: %s 	IP: %d	OP: %d",
+			input_buff.name, output_buff.name, input_buff.dir, 
+			output_buff.dir);
 		if( !is_turn ) begin
 			$display("Wasnt %s turn for %s. Returning",
 				input_buff.name, output_buff.name);
 			return;
 		end
-		
-		
+
+
 		/*IF WE REACHED THIS POINT THEN PUT IT INTO OUTPUT BUFF*/
 		output_buff.push( input_buff.pop() );
-		
+
 		/* Check for credits */
 		if( credits[ output_buff.dir - 1] <= 0) begin
 			$display("CREDITS FOR %s were %d. Returning",
@@ -298,14 +339,71 @@ class router_test;
 
 		/*WE MADE IT. SEND TO OUTPUT*/
 		outputs[output_buff.dir - 1] = output_buff.pop();
+
+		/*----------------------------------------------*/
+		/* THIS IS COMMENTED OUT -- UNCOMMENT */
+		/* DONT FORGET ABOUT ME */
 //->>> UNCOM	//credits[ output_buff.dir - 1] = credits[ output_buff.dir - 1] - 1;
+		/*----------------------------------------------*/
 
-		$display("OUTPUT %d should be %d",
-			output_buff.name, outputs[output_buff.dir - 1]);
+		$display("OUTPUT %s should be %b",
+		output_buff.name, outputs[output_buff.dir - 1]);
+		
+	endfunction;
+	
+	function void handle_input(int inputPort, logic [15:0] header);
+	
+		/* Check if input buffer is full and push */
+		input_buff = get_input_buffer(inputPort);
+		assert( input_buff.dir == inputPort );
+		if( input_buff.isFull() ) begin
+			$display("INPUT BUFFER is full for %s. Returning",
+				input_buff.name);
+			return;
+		end		
+		input_buff.push(header);
+	
+	endfunction
 
+	//golden result
+	function void golden_result(int inputPort, logic [15:0] header);
+
+		if (rst) begin
+			reset();
+			$display("Resetting golden model");
+			return;
+		end
+		
+		if( inputs[c.NORTH - 1] ) begin
+			handle_input(c.NORTH, header);
+		end
+		if( inputs[c.SOUTH - 1] ) begin
+			handle_input(c.SOUTH, header);
+		end
+		if( inputs[c.EAST - 1] ) begin
+			handle_input(c.EAST, header);
+		end
+		if( inputs[c.WEST - 1] ) begin
+			handle_input(c.WEST, header);
+		end
+		if( inputs[c.LOCAL - 1] ) begin
+			handle_input(c.LOCAL, header);
+        	end
+        	
+        	advance_inputPort(c.NORTH);
+        	advance_inputPort(c.SOUTH);
+        	advance_inputPort(c.EAST);
+        	advance_inputPort(c.WEST);
+        	advance_inputPort(c.LOCAL);
+        	
+        	arbiter.advance();	
         
-        
-        
+    endfunction
+    
+    function void print_outputs();
+    	for( int i = 0; i < 5; i++) begin
+    		$display("Output[%d] = %d",i,outputs[i]);
+    	end
     endfunction
 endclass
 
@@ -399,10 +497,13 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         packet = new();
         packet.randomize();
         
+        test.clear_input();
+        test.clear_output();
+        
         test.rst <= 0;
         ctrl_ds.cb.rst <= 0;
-        
-        $display("After randomize -  InputPort:%d, X:%b, Y:%b",
+        $display("\n------------------------------------");
+        $display("After randomize -  InputPort:%d, X:%d, Y:%d",
         	packet.input_port,packet.x,packet.y);
         
         header = { 8'b00000000 , packet.x, packet.y };
@@ -412,28 +513,34 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         if( packet.input_port == c.NORTH ) begin
         	n_ds.cb.valid_i <= 1;
         	n_ds.cb.data_i <= header;
+        	test.inputs[c.NORTH - 1] = header;
         end
         else if( packet.input_port == c.SOUTH ) begin
         	s_ds.cb.valid_i <= 1;
         	s_ds.cb.data_i <= header;
+        	test.inputs[c.SOUTH - 1] = header;
         end
         else if( packet.input_port == c.EAST ) begin
 		e_ds.cb.valid_i <= 1;
 		e_ds.cb.data_i <= header;
+		test.inputs[c.EAST - 1] = header;
         end
         else if( packet.input_port == c.WEST ) begin
 		w_ds.cb.valid_i <= 1;
 		w_ds.cb.data_i <= header;
+		test.inputs[c.WEST - 1] = header;
         end
         else if( packet.input_port == c.LOCAL ) begin
 		l_ds.cb.valid_i <= 1;
 		l_ds.cb.data_i <= header;
+		test.inputs[c.LOCAL - 1] = header;
         end
         
         @(ctrl_ds.cb);
         
-        //test.golden_result(packet.input_port,header);
-
+        test.golden_result(packet.input_port,header);
+        
+        test.print_outputs();
 
     endtask
 
@@ -443,6 +550,12 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         packet = new();
         env = new();
         //env.configure("config.txt");
+        
+        test.XCOORD = 2;
+        test.YCOORD = 2;
+        
+        $display("Starting validation with router at [%d,%d]",
+        	test.XCOORD, test.YCOORD);
 
         // warm up
         repeat (env.warmup_time) begin
