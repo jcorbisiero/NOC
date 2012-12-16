@@ -6,16 +6,20 @@ module top();
 
 	initial $vcdpluson;
 
-	ifc IFC(clk);
-	tb bench (IFC.bench);
+	ifc IFCN(clk);
+	ifc IFCS(clk);
+	ifc IFCE(clk);
+	ifc IFCW(clk);
+	ifc IFCL(clk);
+	tb bench (IFCL.bench);
 
 
 	router#(.XCOORD(0100), .YCOORD(0100),
 			.NORTH(1), .SOUTH(1),
 			.EAST(1), .WEST(1)) dut
-	(	IFC.router, IFC.router,
-		IFC.router, IFC.router, 
-		IFC.router, IFC.control
+	(	IFCN.router, IFCS.router,
+		IFCE.router, IFCW.router, 
+		IFCL.router, IFC.control
 	);
 
 endmodule
