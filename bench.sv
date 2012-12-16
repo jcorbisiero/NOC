@@ -694,13 +694,13 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         
         	$display("------------------------------------------");
         	$display("CHECKING");
-        	if( env.cycle >= 4 ) begin
-			$display("%b", s_ds.cb.data_o);
-			//checker.check_results(n_ds.cb.data_o, n_ds.cb.enable_o, test.outputs[c.NORTH -1], c.NORTH);
-			//checker.check_results(s_ds.cb.data_o, s_ds.cb.enable_o, test.outputs[c.SOUTH -1], c.SOUTH);
-		//checker.check_result(e_ds.cb.data_o, e_ds.cb.enable_o, test.outputs[c.EAST -1], c.EAST);
-		//checker.check_result(w_ds.cb.data_o, w_ds.cb.enable_o, test.outputs[c.WEST -1], c.WEST);
-		//checker.check_result(l_ds.cb.data_o, l_ds.cb.enable_o, test.outputs[c.LOCAL -1], c.LOCAL);
+        	if( env.cycle >= 3 ) begin
+			//$display("%b %b", s_ds.cb.data_o, s_ds.cb.enable_o);
+			checker.check_results(n_ds.cb.data_o, n_ds.cb.enable_o, test.outputs[c.NORTH -1], c.NORTH);
+			checker.check_results(s_ds.cb.data_o, s_ds.cb.enable_o, test.outputs[c.SOUTH -1], c.SOUTH);
+			checker.check_results(e_ds.cb.data_o, e_ds.cb.enable_o, test.outputs[c.EAST -1], c.EAST);
+			checker.check_results(w_ds.cb.data_o, w_ds.cb.enable_o, test.outputs[c.WEST -1], c.WEST);
+			checker.check_results(l_ds.cb.data_o, l_ds.cb.enable_o, test.outputs[c.LOCAL -1], c.LOCAL);
 		end
 		$display("--------------------------------------");
         end
