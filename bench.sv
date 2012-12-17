@@ -77,6 +77,7 @@ class arbiter;
 		/*Local*/
 		turns[4] = turns[4] >> 1;
 		if( turns[4] == 5'b0001) turns[4] = 5'b10000;
+		
 	endfunction
 
 endclass
@@ -141,6 +142,12 @@ class buffer;
 	function int isEmpty();
 		return ( index == 0 );
 	endfunction
+	
+	function void print();
+		for( int i = 0; i < BUFF_SIZE; i++) begin
+			$display("%s[%d]=%d",name,i,buff[i]);
+		end
+	endfunction
 endclass
 					
 					
@@ -165,6 +172,8 @@ class router_test;
 	int credits [4:0];
 	int outputs [4:0];
 	int inputs  [4:0];
+	
+	int delayed_outputs[4:0];
 	
 	/* Temporaray variables */
 	buffer input_buff;
@@ -245,29 +254,29 @@ class router_test;
 		end
 	endfunction
 	
-	function buffer get_output_buffer(logic [15:0] header);
+	function buffer get_output_buffer(logic [15:0] header_l);
 	
-		int H_YCOORD = header[3:0];
-		int H_XCOORD = header[7:4];
+		int H_YCOORD = header_l[3:0];
+		int H_XCOORD = header_l[7:4];
 	
 		if( H_YCOORD < YCOORD ) begin
-			return N_input_buff;
+			return N_output_buff;
 		end
 		else if ( H_YCOORD > YCOORD ) begin
-			return S_input_buff;
+			return S_output_buff;
 		end
 		else if ( H_YCOORD == YCOORD && H_XCOORD < XCOORD ) begin
-			return W_input_buff;
+			return W_output_buff;
 		end
 		else if ( H_YCOORD == YCOORD && H_XCOORD > XCOORD ) begin
-			return E_input_buff;
+			return E_output_buff;
 		end
 		else if ( H_YCOORD == YCOORD && H_XCOORD == XCOORD ) begin
-			return L_input_buff;
+			return L_output_buff;
 		end
 		else begin
 			$display("ERROR in get_output_buffer. Header: %b -- to [%d,%d]",
-				header, XCOORD, YCOORD);
+				header_l, XCOORD, YCOORD);
 			$exit();
 		end
 	endfunction
@@ -291,7 +300,7 @@ class router_test;
 		if( output_buff.dir == inputPort ) begin
 			$display("OUTPUT BUFFER is the same as INPUT PORT -- %s. Returning",
 				output_buff.name);
-			output_buff.pop();
+			input_buff.pop();
 			return;
 		end
 		if( output_buff.isFull() ) begin
@@ -337,7 +346,7 @@ class router_test;
 		
 	endfunction;
 	
-	function void handle_input(int inputPort, logic [15:0] header);
+	function void handle_input(int inputPort, logic [15:0] header_l);
 	
 		/* Check if input buffer is full and push */
 		input_buff = get_input_buffer(inputPort);
@@ -347,13 +356,13 @@ class router_test;
 				input_buff.name);
 			return;
 		end		
-		input_buff.push(header);
+		input_buff.push(header_l);
 	
 	endfunction
 
 	//golden result
-	function void golden_result(logic [15:0] header);
-
+	function void golden_result(logic [15:0] header_l);
+		
 		if (rst) begin
 			reset();
 			$display("Resetting golden model");
@@ -361,19 +370,19 @@ class router_test;
 		end
 		
 		if( inputs[c.NORTH - 1] != -1 ) begin
-			handle_input(c.NORTH, header);
+			handle_input(c.NORTH, header_l);
 		end
 		if( inputs[c.SOUTH - 1] != -1 ) begin
-			handle_input(c.SOUTH, header);
+			handle_input(c.SOUTH, header_l);
 		end
 		if( inputs[c.EAST - 1] != -1) begin
-			handle_input(c.EAST, header);
+			handle_input(c.EAST, header_l);
 		end
 		if( inputs[c.WEST - 1] != -1) begin
-			handle_input(c.WEST, header);
+			handle_input(c.WEST, header_l);
 		end
 		if( inputs[c.LOCAL - 1] != -1) begin
-			handle_input(c.LOCAL, header);
+			handle_input(c.LOCAL, header_l);
         	end
         	
         	advance_inputPort(c.NORTH);
@@ -383,7 +392,22 @@ class router_test;
         	advance_inputPort(c.LOCAL);
         	
         	arbiter.advance();	
+        	
+        	N_input_buff.print();
+        	$display("%d",outputs[0]);
+        	$display("%d",outputs[1]);
+        	$display("%d",outputs[2]);
+        	$display("%d",outputs[3]);
+        	$display("%d",outputs[4]);
         
+    endfunction
+    
+    function void move_outputs();
+	delayed_outputs[0] = outputs[0];
+	delayed_outputs[1] = outputs[1];
+	delayed_outputs[2] = outputs[2];
+	delayed_outputs[3] = outputs[3];
+	delayed_outputs[4] = outputs[4];
     endfunction
     
     function void print_outputs();
@@ -395,7 +419,7 @@ endclass
 
 class router_checker;	//checker class
 	
-	Constants c;
+	Constants c;	
 	
 	function void check_results(int data_o, int enable_o, int value, int dir);
 		
@@ -588,32 +612,32 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 	
 	endtask
 	
-	task activate_message(int input_port, logic [15:0] header);
+	task activate_message(int input_port, logic [15:0] header_l);
 
 		if( input_port == c.NORTH ) begin
 			n_ds.cb.valid_i <= 1;
-			n_ds.cb.data_i <= header;
-			test.inputs[c.NORTH - 1] = header;
+			n_ds.cb.data_i <= header_l;
+			test.inputs[c.NORTH - 1] = header_l;
 		end
 		else if( input_port == c.SOUTH ) begin
 			s_ds.cb.valid_i <= 1;
-			s_ds.cb.data_i <= header;
-			test.inputs[c.SOUTH - 1] = header;
+			s_ds.cb.data_i <= header_l;
+			test.inputs[c.SOUTH - 1] = header_l;
 		end
 		else if( input_port == c.EAST ) begin
 			e_ds.cb.valid_i <= 1;
-			e_ds.cb.data_i <= header;
-			test.inputs[c.EAST - 1] = header;
+			e_ds.cb.data_i <= header_l;
+			test.inputs[c.EAST - 1] = header_l;
 		end
 		else if( input_port == c.WEST ) begin
 			w_ds.cb.valid_i <= 1;
-			w_ds.cb.data_i <= header;
-			test.inputs[c.WEST - 1] = header;
+			w_ds.cb.data_i <= header_l;
+			test.inputs[c.WEST - 1] = header_l;
 		end
 		else if( input_port == c.LOCAL ) begin
 			l_ds.cb.valid_i <= 1;
-			l_ds.cb.data_i <= header;
-			test.inputs[c.LOCAL - 1] = header;
+			l_ds.cb.data_i <= header_l;
+			test.inputs[c.LOCAL - 1] = header_l;
 		end
 		else begin
 			$display("NO VALID INPUT PORT FOR %d", input_port);
@@ -625,6 +649,9 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         cycle = env.cycle;
         packet = new(env);
         packet.randomize();
+        
+        /*For delay -- prob not the right place*/        
+        test.move_outputs();
         
         test.clear_input();
         test.clear_output();
@@ -665,8 +692,6 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 
         
         test.golden_result(header);
-        
-        test.print_outputs();
 
     endtask
 
@@ -694,17 +719,16 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         
         	$display("------------------------------------------");
         	$display("CHECKING");
-        	if( env.cycle >= 3 ) begin
-			//$display("%b %b", s_ds.cb.data_o, s_ds.cb.enable_o);
-			checker.check_results(n_ds.cb.data_o, n_ds.cb.enable_o, test.outputs[c.NORTH -1], c.NORTH);
-			checker.check_results(s_ds.cb.data_o, s_ds.cb.enable_o, test.outputs[c.SOUTH -1], c.SOUTH);
-			checker.check_results(e_ds.cb.data_o, e_ds.cb.enable_o, test.outputs[c.EAST -1], c.EAST);
-			checker.check_results(w_ds.cb.data_o, w_ds.cb.enable_o, test.outputs[c.WEST -1], c.WEST);
-			checker.check_results(l_ds.cb.data_o, l_ds.cb.enable_o, test.outputs[c.LOCAL -1], c.LOCAL);
-		end
+		//$display("%b %b", s_ds.cb.data_o, s_ds.cb.enable_o);
+		checker.check_results(n_ds.cb.data_o, n_ds.cb.enable_o, test.delayed_outputs[c.NORTH -1], c.NORTH);
+		checker.check_results(s_ds.cb.data_o, s_ds.cb.enable_o, test.delayed_outputs[c.SOUTH -1], c.SOUTH);
+		checker.check_results(e_ds.cb.data_o, e_ds.cb.enable_o, test.delayed_outputs[c.EAST -1], c.EAST);
+		checker.check_results(w_ds.cb.data_o, w_ds.cb.enable_o, test.delayed_outputs[c.WEST -1], c.WEST);
+		checker.check_results(l_ds.cb.data_o, l_ds.cb.enable_o, test.delayed_outputs[c.LOCAL -1], c.LOCAL);
 		$display("--------------------------------------");
         end
         
         $display("\n\n----%d cycles completed succesfully ----\n\n", env.cycle);
     end
 endprogram
+	
