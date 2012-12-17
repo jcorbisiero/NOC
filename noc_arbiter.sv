@@ -32,9 +32,7 @@ always_ff @(posedge clk) begin
 		LTurn <= 5'b10000;	
 	end else begin
 		NTurn <= NTurn >> 1;
-		if (NTurn >> 1== 5'b00000) NTurn <= 5'b010000;
-		
-		$display("STurn is before %b", STurn);
+		if (NTurn >> 1== 5'b00000) NTurn <= 5'b01000;
 
 		STurn <= STurn >> 1;
 		if (STurn >> 1== 5'b01000) STurn <= STurn >> 1;
@@ -50,8 +48,6 @@ always_ff @(posedge clk) begin
 
 		LTurn <= LTurn >> 1;
 		if (LTurn >> 1== 5'b00001) LTurn <= 5'b10000;
-		
-		$display("STurn is now %b. O is %b", STurn, S_turn_o);
 	end
 end
 
