@@ -56,7 +56,8 @@ $display("----- Input Port -------");
 
 	if (shift) begin
 		assert(!empty);
-		$display("Popping in input -- Empty:%d, Full:%d",empty,full);
+		$display("Popping in input -- Pop:%d, Empty:%d, Full:%d",
+			pop_n,empty,full);
 		pop_n = 0;
 	end else begin
 		pop_n = 1;
@@ -65,9 +66,11 @@ $display("----- Input Port -------");
 	$display("Input Empty: %d  Read_valid_o: %d", empty, read_valid_o);
 
 	if (!empty) begin
+		$display("I AM NOT EMPTY");
 		read_valid_o = 1;
 	end else begin
 		read_valid_o = 0;
+		$display("I AM EMPTY");
 	end
 
 	//assert(!error);

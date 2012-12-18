@@ -658,6 +658,18 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         test.clear_input();
         test.clear_output();
         
+        //Reset inputs to DUT
+        n_ds.cb.valid_i <= 0;
+	n_ds.cb.data_i <= 0;
+	s_ds.cb.valid_i <= 0;
+	s_ds.cb.data_i <= 0;
+	e_ds.cb.valid_i <= 0;
+	e_ds.cb.data_i <= 0;
+	w_ds.cb.valid_i <= 0;
+	w_ds.cb.data_i <= 0;
+	l_ds.cb.valid_i <= 0;
+	l_ds.cb.data_i <= 0;
+        
         test.rst 	<= (packet.rst < 10*env.reset_density);
         ctrl_ds.cb.rst 	<= (packet.rst < 10*env.reset_density);
         
@@ -669,7 +681,7 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 
 	$display("Header: %b", header);
         
-        if( packet.rst > 4 ) begin
+        if( packet.rst > 7) begin
         	if( env.input1_active ) begin
         		$display("Activating port 1");
         		activate_message(packet.input_port1,header);

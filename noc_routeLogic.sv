@@ -56,12 +56,19 @@ always_comb begin
 
 $display("----- Routing Logic -------");
 $display(" %d %d %d %d ", N_valid_i, S_valid_i,E_valid_i, W_valid_i, L_valid_i);
+$display("L_port_remove: %d", L_port_remove);
 
-		N_port_enable = 0;
-		S_port_enable = 0;
-		E_port_enable = 0;
-		W_port_enable = 0;
-		L_port_enable = 0;
+N_port_enable = 0;
+S_port_enable = 0;
+E_port_enable = 0;
+W_port_enable = 0;
+L_port_enable = 0;
+
+N_port_remove = 0;
+S_port_remove = 0;
+E_port_remove = 0;
+W_port_remove = 0;
+L_port_remove = 0;
 
 	if(N_valid_i) begin
 		//assert(OneHot(N_data_i[3:0]));

@@ -15,7 +15,7 @@ reg [4:0] ETurn;
 reg [4:0] WTurn;
 reg [4:0] LTurn;
 
-always_ff @(posedge clk) begin
+always_comb begin
 	N_turn_o <= NTurn;
 	S_turn_o <= STurn;
 	E_turn_o <= ETurn;
