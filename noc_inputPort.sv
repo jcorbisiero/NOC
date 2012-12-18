@@ -41,16 +41,19 @@ always_comb begin
 	end
 
 
-	if (write_en && !full) begin
+	if (write_en == 1 && !full) begin
+		$display("Pushing -- Data_i:%d Data_out:%d", data_i, data_o);
 		push_n = 0;
 	end else begin
+		$display("Not Pushing -- Data_i:%d Write_en: %d Full:%d Data_out:%d",
+			data_i, write_en, full,data_o);
 		push_n = 1;
 	end
 
 
 	if (shift) begin
 		assert(!empty);
-
+		$display("Popping in input");
 		pop_n = 0;
 	end else begin
 		pop_n = 1;
@@ -63,7 +66,7 @@ always_comb begin
 		read_valid_o = 0;
 	end
 
-	assert(!error);
+	//assert(!error);
 end
 
 endmodule

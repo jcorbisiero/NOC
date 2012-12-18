@@ -393,7 +393,7 @@ class router_test;
         	
         	arbiter.advance();	
         	
-        	N_input_buff.print();
+        	L_input_buff.print();
         	$display("%d",outputs[0]);
         	$display("%d",outputs[1]);
         	$display("%d",outputs[2]);
