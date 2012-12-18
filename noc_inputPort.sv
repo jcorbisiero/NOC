@@ -34,6 +34,9 @@ DW_fifo_s1_sf#(.width(16), .depth(5), .rst_mode(1))  buffer(
 	);
 
 always_comb begin
+
+$display("----- Input Port -------");
+
 	if (rst) begin
 		rst_n = 0;
 	end else begin

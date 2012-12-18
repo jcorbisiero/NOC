@@ -17,6 +17,9 @@ module crossbarSwitch(
 );
 
 always_comb begin
+
+$display("----- Switch -------");
+
 	case(N_port_select)
 		3'b000: N_data_o = 16'bx;
 		3'b001: N_data_o = S_data_i;

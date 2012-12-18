@@ -19,8 +19,6 @@ reg pop_n;
 reg empty;
 reg error;
 
-reg [15:0] outputReg;
-
 wire almost_empty;
 wire half_full;
 wire almost_full;
@@ -37,6 +35,9 @@ DW_fifo_s1_sf #(.width(16), .depth(5), .rst_mode(1)) buffer2(
 	);
 
 always_comb begin
+
+$display("----- OutputPort -------");
+
 	if (rst) begin
 		count <= 'b101;
 		rst_n = 0;

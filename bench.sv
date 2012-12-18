@@ -45,6 +45,8 @@ class arbiter;
 		/*Get bitmask for proper port*/
 		bitmask = c.BITMASKS[inputPort - 1];
 		
+		$display("Bitmask: %b Turns[OP-1]:%b", bitmask,turns[outputPort-1]);
+		
 		/* Check if the inputPorts turn */
 		if( turns[outputPort - 1] & bitmask) begin
 			return 1;

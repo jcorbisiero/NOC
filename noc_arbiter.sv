@@ -15,15 +15,18 @@ reg [4:0] ETurn;
 reg [4:0] WTurn;
 reg [4:0] LTurn;
 
-always_comb begin
+always_ff @(posedge clk) begin
 	N_turn_o <= NTurn;
 	S_turn_o <= STurn;
 	E_turn_o <= ETurn;
 	W_turn_o <= WTurn;
 	L_turn_o <= LTurn;
+	
+	$display("STurn: %b, STurn_o: %b",STurn, S_turn_o);
 end
 
 always_ff @(posedge clk) begin
+$display("------ Arbiter ------");
 	if (rst) begin
 		NTurn <= 5'b01000;
 		STurn <= 5'b00100;
@@ -34,9 +37,18 @@ always_ff @(posedge clk) begin
 		NTurn <= NTurn >> 1;
 		if (NTurn >> 1== 5'b00000) NTurn <= 5'b01000;
 
+		$display("STurn Before: %b", STurn);
+
 		STurn <= STurn >> 1;
-		if (STurn >> 1== 5'b01000) STurn <= STurn >> 1;
-		else if (STurn >> 1== 5'b00000) STurn <= 5'b10000;
+		if (STurn >> 1== 5'b01000) begin 
+			STurn <= STurn >> 1;
+			$display("S1");
+		end
+		else if (STurn >> 1== 5'b00000)begin
+			STurn <= 5'b10000;
+			$display("S2");
+		end
+		$display("STurn After: %b", STurn);
 
 		ETurn <= ETurn >> 1;
 		if (ETurn >> 1== 5'b00100) ETurn <= ETurn >> 1;
