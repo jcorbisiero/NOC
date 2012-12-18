@@ -8,7 +8,7 @@ module inputPort
 	input shift,
 
 	output [15:0] data_o,
-	output reg read_valid_o
+	output logic read_valid_o
 );
 
 reg rst_n;
@@ -56,12 +56,13 @@ $display("----- Input Port -------");
 
 	if (shift) begin
 		assert(!empty);
-		$display("Popping in input");
+		$display("Popping in input -- Empty:%d, Full:%d",empty,full);
 		pop_n = 0;
 	end else begin
 		pop_n = 1;
 	end
 
+	$display("Input Empty: %d  Read_valid_o: %d", empty, read_valid_o);
 
 	if (!empty) begin
 		read_valid_o = 1;

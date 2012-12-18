@@ -669,10 +669,12 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 
 	$display("Header: %b", header);
         
-        if( env.input1_active ) begin
-        	$display("Activating port 1");
-        	activate_message(packet.input_port1,header);
-        end 
+        if( packet.rst > 4 ) begin
+        	if( env.input1_active ) begin
+        		$display("Activating port 1");
+        		activate_message(packet.input_port1,header);
+        	end 
+        end
         if( env.input2_active ) begin
         	$display("Activating port 2");
 	        activate_message(packet.input_port2,header);
@@ -691,7 +693,6 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         end 
         
         @(ctrl_ds.cb);
-
         
         test.golden_result(header);
 

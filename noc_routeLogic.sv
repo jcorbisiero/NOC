@@ -247,6 +247,10 @@ $display(" %d %d %d %d ", N_valid_i, S_valid_i,E_valid_i, W_valid_i, L_valid_i);
 					W_port_enable = 1;
 					L_credit_inc = 1;
 				end
+			end else begin
+				$display("Dropping packet sent to Local");
+				L_port_remove = 1;
+				L_credit_inc = 1;
 			end
 		end
 	end

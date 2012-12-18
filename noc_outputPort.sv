@@ -6,7 +6,7 @@ module outputPort(
 	input port_en,
 	input inc_credit_i,
 
-	output logic [15:0] data_o,
+	output [15:0] data_o,
 	output logic send_data,
 	output reg full
 );
@@ -39,7 +39,7 @@ always_comb begin
 $display("----- OutputPort -------");
 
 	if (rst) begin
-		count <= 'b101;
+		count <= 3'b101;
 		rst_n = 0;
 		send_data = 0;
 	end else begin
