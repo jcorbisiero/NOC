@@ -1,5 +1,4 @@
-module router#(	parameter XCOORD = 1111, parameter YCOORD = 1111 
-		NORTH = 0, SOUTH = 1, EAST = 1, WEST = 1)
+module nedge_router#(	parameter XCOORD = 1111, parameter YCOORD = 1111)
 (
 	ifc_a S_ifc_a,
 	ifc_a S_ifc_b,
@@ -130,7 +129,8 @@ outputPort lOutPort(.clk(control.clk),
 
 
 //Routing Logic
-routeLogic#(.XCOORD(XCOORD), .YCOORD(YCOORD)) route
+routeLogic#(.XCOORD(XCOORD), .YCOORD(YCOORD),
+		.NORTH(0), .SOUTH(1), .EAST(1), .WEST(1)) route
 (		.N_data_i('0),
 		.S_data_i(S_rcvd_data[7:0]),
 		.E_data_i(E_rcvd_data[7:0]),
