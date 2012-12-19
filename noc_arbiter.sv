@@ -22,11 +22,11 @@ always_comb begin
 	W_turn_o <= WTurn;
 	L_turn_o <= LTurn;
 	
-	$display("STurn: %b, STurn_o: %b",STurn, S_turn_o);
+	//$display("STurn: %b, STurn_o: %b",STurn, S_turn_o);
 end
 
 always_ff @(posedge clk) begin
-$display("------ Arbiter ------");
+	//$display("------ Arbiter ------");
 	if (rst) begin
 		NTurn <= 5'b01000;
 		STurn <= 5'b00100;
