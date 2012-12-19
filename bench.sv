@@ -501,6 +501,8 @@ class router_env;
             end
             else if("RESET_DENSITY" == param) begin
             	this.reset_density = value;
+            	$display("Reset density: %d",value);
+            	$exit();
             end
             else if("INPUT1" == param) begin
             	$display("In input1");
@@ -718,8 +720,8 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 	$display("Header: %b", header);
 	
 	
-	test.rst 	<= (packet.rst < 10*env.reset_density);
-        ctrl_ds.cb.rst 	<= (packet.rst < 10*env.reset_density);
+	test.rst 	<= (packet.rst < env.reset_density);
+        ctrl_ds.cb.rst 	<= (packet.rst < env.reset_density);
         
 	n_ds.cb.credit_i <= 1;
 	s_ds.cb.credit_i <= 1;
