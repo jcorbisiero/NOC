@@ -1,4 +1,4 @@
-module router#(	parameter XCOORD = 1111,
+module se_router#(parameter XCOORD = 1111,
 		parameter YCOORD = 1111 )
 (
 	ifc_a N_ifc_a,

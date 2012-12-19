@@ -1,4 +1,4 @@
-module wedge_router#(	parameter XCOORD = 1111,
+module wedge_router# (parameter XCOORD = 1111,
 		parameter YCOORD = 1111 )
 (
 	ifc_a N_ifc_a,
@@ -144,8 +144,8 @@ routeLogic#(.XCOORD(XCOORD), .YCOORD(YCOORD),
 		.L_valid_i(L_rcvd_valid),
 		.N_port_full(N_full),
 		.S_port_full(S_full),
-		.E_port_full('0),
-		.W_port_full(W_full),
+		.E_port_full(E_full),
+		.W_port_full('0),
 		.L_port_full(L_full),
 		.N_turn(N_turn),
 		.S_turn(S_turn),
@@ -198,7 +198,7 @@ crossbarSwitch switch (
 			.N_data_o(N_send_data),
 			.S_data_o(S_send_data),
 			.E_data_o(E_send_data),
-			.W_data_o('0),
+			.W_data_o(),
 			.L_data_o(L_send_data));
 
 endmodule

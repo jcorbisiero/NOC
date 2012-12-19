@@ -52,16 +52,26 @@ ifc_a ifc_20_21_u(control.clk);
 ifc_a ifc_30_31_u(control.clk);
 
 //Second row to third row
-ifc_a ifc_01_02(control.clk);
-ifc_a ifc_11_12(control.clk);
-ifc_a ifc_21_22(control.clk);
-ifc_a ifc_31_32(control.clk);
+ifc_a ifc_01_02_d(control.clk);
+ifc_a ifc_11_12_d(control.clk);
+ifc_a ifc_21_22_d(control.clk);
+ifc_a ifc_31_32_d(control.clk);
+
+ifc_a ifc_01_02_u(control.clk);
+ifc_a ifc_11_12_u(control.clk);
+ifc_a ifc_21_22_u(control.clk);
+ifc_a ifc_31_32_u(control.clk);
 
 //Third row to fourth row
-ifc_a ifc_02_03(control.clk);
-ifc_a ifc_12_13(control.clk);
-ifc_a ifc_22_23(control.clk);
-ifc_a ifc_32_33(control.clk);
+ifc_a ifc_02_03_d(control.clk);
+ifc_a ifc_12_13_d(control.clk);
+ifc_a ifc_22_23_d(control.clk);
+ifc_a ifc_32_33_d(control.clk);
+
+ifc_a ifc_02_03_u(control.clk);
+ifc_a ifc_12_13_u(control.clk);
+ifc_a ifc_22_23_u(control.clk);
+ifc_a ifc_32_33_u(control.clk);
 
 //First column to second column
 ifc_a ifc_00_10_r(control.clk);
@@ -136,13 +146,150 @@ ne_router #(.XCOORD(3), .YCOORD(0)) r3_0(
 	.W_ifc_b(ifc_20_30_r.receive),
 	.L_ifc_a(ifc_3_0_to.send),
 	.L_ifc_b(ifc_3_0_from.receive));
-/*
+
+
+//row 1
+wedge_router #(.XCOORD(0), .YCOORD(1)) r0_1(
+	.control,
+	.N_ifc_a(ifc_00_01_u.send),
+	.N_ifc_b(ifc_00_01_d.receive),
+	.S_ifc_a(ifc_01_02_d.send),
+	.S_ifc_b(ifc_01_02_u.receive),
+	.E_ifc_a(ifc_01_11_r.send),
+	.E_ifc_b(ifc_01_11_l.receive),
+	.L_ifc_a(ifc_0_1_to.send),
+	.L_ifc_b(ifc_0_1_from.receive));
+
+router #(.XCOORD(1), .YCOORD(1)) r1_1(
+	.control,
+	.N_ifc_a(ifc_10_11_u.send),
+	.N_ifc_b(ifc_10_11_d.receive),
+	.S_ifc_a(ifc_11_12_d.send),
+	.S_ifc_b(ifc_11_12_u.receive),
+	.E_ifc_a(ifc_11_21_r.send),
+	.E_ifc_b(ifc_11_21_l.receive),
+	.W_ifc_a(ifc_01_11_l.send),
+	.W_ifc_b(ifc_01_11_r.receive),
+	.L_ifc_a(ifc_1_1_to.send),
+	.L_ifc_b(ifc_1_1_from.receive));
+
+router #(.XCOORD(2), .YCOORD(1)) r2_1(
+	.control,
+	.N_ifc_a(ifc_20_21_u.send),
+	.N_ifc_b(ifc_20_21_d.receive),
+	.S_ifc_a(ifc_21_22_d.send),
+	.S_ifc_b(ifc_21_22_u.receive),
+	.E_ifc_a(ifc_21_31_r.send),
+	.E_ifc_b(ifc_21_31_l.receive),
+	.W_ifc_a(ifc_11_21_l.send),
+	.W_ifc_b(ifc_11_21_r.receive),
+	.L_ifc_a(ifc_2_1_to.send),
+	.L_ifc_b(ifc_2_1_from.receive));
+
+eedge_router #(.XCOORD(3), .YCOORD(1)) r3_1(
+	.control,
+	.N_ifc_a(ifc_30_31_u.send),
+	.N_ifc_b(ifc_30_31_d.receive),
+	.S_ifc_a(ifc_31_32_d.send),
+	.S_ifc_b(ifc_31_32_u.receive),
+	.W_ifc_a(ifc_21_31_l.send),
+	.W_ifc_b(ifc_21_31_r.receive),
+	.L_ifc_a(ifc_3_1_to.send),
+	.L_ifc_b(ifc_3_1_from.receive));
+
+//row 2
+wedge_router #(.XCOORD(0), .YCOORD(2)) r0_2(
+	.control,
+	.N_ifc_a(ifc_01_02_u.send),
+	.N_ifc_b(ifc_01_02_d.receive),
+	.S_ifc_a(ifc_02_03_d.send),
+	.S_ifc_b(ifc_02_03_u.receive),
+	.E_ifc_a(ifc_02_12_r.send),
+	.E_ifc_b(ifc_02_12_l.receive),
+	.L_ifc_a(ifc_0_2_to.send),
+	.L_ifc_b(ifc_0_2_from.receive));
+
+router #(.XCOORD(1), .YCOORD(2)) r1_2(
+	.control,
+	.N_ifc_a(ifc_11_12_u.send),
+	.N_ifc_b(ifc_11_12_d.receive),
+	.S_ifc_a(ifc_12_13_d.send),
+	.S_ifc_b(ifc_12_13_u.receive),
+	.E_ifc_a(ifc_12_22_r.send),
+	.E_ifc_b(ifc_12_22_l.receive),
+	.W_ifc_a(ifc_02_12_l.send),
+	.W_ifc_b(ifc_02_12_r.receive),
+	.L_ifc_a(ifc_1_2_to.send),
+	.L_ifc_b(ifc_1_2_from.receive));
+
+router #(.XCOORD(2), .YCOORD(2)) r2_2(
+	.control,
+	.N_ifc_a(ifc_21_22_u.send),
+	.N_ifc_b(ifc_21_22_d.receive),
+	.S_ifc_a(ifc_22_23_d.send),
+	.S_ifc_b(ifc_22_23_u.receive),
+	.E_ifc_a(ifc_22_32_r.send),
+	.E_ifc_b(ifc_22_32_l.receive),
+	.W_ifc_a(ifc_12_22_l.send),
+	.W_ifc_b(ifc_12_22_r.receive),
+	.L_ifc_a(ifc_2_2_to.send),
+	.L_ifc_b(ifc_2_2_from.receive));
+
+eedge_router #(.XCOORD(3), .YCOORD(2)) r3_2(
+	.control,
+	.N_ifc_a(ifc_31_32_u.send),
+	.N_ifc_b(ifc_31_32_d.receive),
+	.S_ifc_a(ifc_32_33_d.send),
+	.S_ifc_b(ifc_32_33_u.receive),
+	.W_ifc_a(ifc_22_32_l.send),
+	.W_ifc_b(ifc_22_32_r.receive),
+	.L_ifc_a(ifc_3_2_to.send),
+	.L_ifc_b(ifc_3_2_from.receive));
+
+//row 3
+
 sw_router #(.XCOORD(0), .YCOORD(3)) r0_3(
 	.control,
-	.N_ifc(ifc_02_03.router),
-	.E_ifc(ifc_03_13.router),
-	.L_ifc(ifc_0_3));
-*/
+	.N_ifc_a(ifc_02_03_u.send),
+	.N_ifc_b(ifc_02_03_d.receive),
+	.E_ifc_a(ifc_03_13_r.send),
+	.E_ifc_b(ifc_03_13_l.receive),
+	.L_ifc_a(ifc_0_3_to.send),
+	.L_ifc_b(ifc_0_3_from.receive));
+
+sedge_router #(.XCOORD(1), .YCOORD(3)) r1_3(
+	.control,
+	.N_ifc_a(ifc_12_13_u.send),
+	.N_ifc_b(ifc_12_13_d.receive),
+	.E_ifc_a(ifc_13_23_r.send),
+	.E_ifc_b(ifc_13_23_l.receive),
+	.W_ifc_a(ifc_03_13_l.send),
+	.W_ifc_b(ifc_03_13_r.receive),
+	.L_ifc_a(ifc_1_3_to.send),
+	.L_ifc_b(ifc_1_3_from.receive));
+
+sedge_router #(.XCOORD(2), .YCOORD(3)) r2_3(
+	.control,
+	.N_ifc_a(ifc_22_23_u.send),
+	.N_ifc_b(ifc_22_23_d.receive),
+	.E_ifc_a(ifc_23_33_r.send),
+	.E_ifc_b(ifc_23_33_l.receive),
+	.W_ifc_a(ifc_13_23_l.send),
+	.W_ifc_b(ifc_13_23_r.receive),
+	.L_ifc_a(ifc_2_3_to.send),
+	.L_ifc_b(ifc_2_3_from.receive));
+
+se_router #(.XCOORD(3), .YCOORD(3)) r3_3(
+	.control,
+	.N_ifc_a(ifc_32_33_u.send),
+	.N_ifc_b(ifc_32_33_d.receive),
+	.W_ifc_a(ifc_23_33_l.send),
+	.W_ifc_b(ifc_23_33_r.receive),
+	.L_ifc_a(ifc_3_3_to.send),
+	.L_ifc_b(ifc_3_3_from.receive));
+
+
+
 /*
 //first row, x = 0
 router #(.XCOORD(0), .YCOORD(0), .SOUTH(1), .EAST(1))r0_0 (	
