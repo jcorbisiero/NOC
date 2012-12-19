@@ -181,7 +181,7 @@ class router_test;
 	int delayed_outputs[4:0];
 	int message_counter [4:0];
 	
-	router_test neighbors [4:0];
+	router_test neighbors [3:0];
 	
 	/* Temporaray variables */
 	buffer input_buff;
@@ -311,44 +311,49 @@ class router_test;
 		end		
 		
 		header = input_buff.peek();
+		$display("Peeking at input %d of input_buff %s (%d,%d)", 
+				header, input_buff.name, XCOORD, YCOORD);
 		
 		/* Get output buffer */
 		output_buff = get_output_buffer(header);
+		$display("Output buff was: %s", output_buff.name);
 
 		/* Begin error checking and full check */
 		if( output_buff.dir == inputPort ) begin
-			//$display("OUTPUT BUFFER is the same as INPUT PORT -- %s. Returning",
-			//	output_buff.name);
+			$display("OUTPUT BUFFER is the same as INPUT PORT -- %s. Returning",
+				output_buff.name);
 			input_buff.pop();
 			inc_neighbors_credits(input_buff.dir);
 			return;
 		end
 		if( (input_buff.dir == c.EAST || input_buff.dir == c.WEST) &&
 			header[3:0] != YCOORD ) begin
-			//$display("Illegal port for %s (Attempt to send to %s)",
-			//	input_buff.name, output_buff.name);
+			$display("Illegal port for %s (Attempt to send to %s)",
+				input_buff.name, output_buff.name);
 			input_buff.pop();
 			inc_neighbors_credits(input_buff.dir);
 			return;
 		end
 		if( output_buff.isFull() ) begin
-			//$display("OUTPUT BUFFER is full -- %s. Returning",
-			//		output_buff.name);
+			$display("OUTPUT BUFFER is full -- %s. Returning",
+					output_buff.name);
 			return;
 		end
 
 
 		/*Check arbiter */
 		is_turn = arbiter.is_turn(input_buff.dir, output_buff.dir);
-		//$display("Checking: %s. Sending to: %s 	IP: %d	OP: %d",
-		//	input_buff.name, output_buff.name, input_buff.dir, 
-		//	output_buff.dir);
+		$display("Checking: %s. Sending to: %s 	IP: %d	OP: %d",
+			input_buff.name, output_buff.name, input_buff.dir, 
+			output_buff.dir);
 		if( !is_turn ) begin
-			//$display("Wasnt %s turn for %s. Returning",
-			//	input_buff.name, output_buff.name);
+			$display("Wasnt %s turn for %s. Returning",
+				input_buff.name, output_buff.name);
 			return;
 		end
 
+		$display("Popping off input_buff %s onto output buff %s",
+			input_buff.name, output_buff.name);
 
 		/*IF WE REACHED THIS POINT THEN PUT IT INTO OUTPUT BUFF*/
 		output_buff.push( input_buff.pop() );
@@ -389,7 +394,8 @@ class router_test;
 			//$display("INPUT BUFFER is full for %s. Returning",
 			//	input_buff.name);
 			return;
-		end		
+		end
+		$display("Pushing %d onto input_buff", header_l);
 		input_buff.push(header_l);
 	
 	endfunction
@@ -405,7 +411,7 @@ class router_test;
 		
 		if (rst) begin
 			reset();
-			$display("Resetting golden model");
+			//$display("Resetting golden model");
 			return;
 		end
 		
@@ -439,16 +445,17 @@ class router_test;
 			handle_input(c.WEST, inputs[c.WEST - 1]);
 		end
 		if( inputs[c.LOCAL - 1] != -1 && !L_full) begin
+			$display("Checking local -- %d", inputs[c.LOCAL-1]);
 			handle_input(c.LOCAL, inputs[c.LOCAL - 1]);
         	end	
         	
+        	//N_output_buff.print();
+        	//$display("%d",delayed_outputs[0]);
         	/*
         	L_input_buff.print();
-        	N_input_buff.print();
         	E_input_buff.print();
         	S_input_buff.print();
         	W_input_buff.print();
-        	$display("%d",delayed_outputs[0]);
         	$display("%d",delayed_outputs[1]);
         	$display("%d",delayed_outputs[2]);
         	$display("%d",delayed_outputs[3]);
@@ -492,27 +499,31 @@ class router_test;
     function void send_to_neighbors();
     
     	/* Send N message to S port of neighbor*/
-    	if( neighbors[0] ) begin
-    		neighbors[0].inputs[1] = outputs[0];
-    		$display("Sending to neighbor 0");
+    	if( neighbors[0]) begin
+    		neighbors[0].inputs[1] = -1;
+    		if(outputs[0] > 0) neighbors[0].inputs[1] = outputs[0];
+    		//$display("Sending to neighbor 0");
     	end
     	
     	/* Send S message to N port of neighbor*/
-	if( neighbors[1] ) begin
-		neighbors[1].inputs[0] = outputs[1];
-		$display("Sending to neighbor 1");
+	if( neighbors[1]) begin
+		neighbors[1].inputs[0] = -1;
+		if(outputs[1] > 0) neighbors[1].inputs[0] = outputs[1];
+		//$display("Sending to neighbor 1");
     	end
     	
     	/* Send E message to W port of neighbor*/
-	if( neighbors[2] ) begin
-		neighbors[2].inputs[3] = outputs[2];
-		$display("Sending to neighbor 2");
+	if( neighbors[2]) begin
+	    	neighbors[2].inputs[3] = -1;
+	    	if(outputs[2] > 0) neighbors[2].inputs[3] = outputs[2];
+		//$display("Sending to neighbor 2");
 	end
 	
 	/* Send W message to E port of neighbor*/
 	if( neighbors[3] ) begin
-		neighbors[3].inputs[2] = outputs[3];
-		$display("Sending to neighbor 3");
+		neighbors[3].inputs[2] = -1;
+		if( outputs[3] > 0 ) neighbors[3].inputs[2] = outputs[3];
+		//$display("Sending to neighbor 3");
 	end
     endfunction
     

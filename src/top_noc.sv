@@ -1,6 +1,6 @@
 //		`timescale 1ns/1ns
 
-module top_noc();
+module top();
 	bit clk = 1;
 	always #5 clk = ~clk;
 
@@ -48,7 +48,8 @@ module top_noc();
 
 	ifc CTRL(clk);
 
-/*	tb_noc bench (CTRL.control,
+	tb_noc bench (
+		CTRL,
 		ifc_0_0_to,
 		ifc_0_1_to,
 		ifc_0_2_to,
@@ -90,7 +91,7 @@ module top_noc();
 		ifc_3_3_from	
 
 	);
-*/
+
 	noc dut(.control(CTRL.control),
 		.ifc_0_0_to,
 		.ifc_0_1_to,

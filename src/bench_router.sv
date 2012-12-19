@@ -79,7 +79,7 @@ program tb_router (	ifc n_ds_a, ifc n_ds_b,
         packet.randomize();
         
         test.clear_input();
-        test.clear_delayed_output();
+        test.clear_delayed_output(); 
         
         //Reset inputs to DUT
         n_ds_b.cb_s.enable 	<= 0;
@@ -152,20 +152,31 @@ program tb_router (	ifc n_ds_a, ifc n_ds_b,
 	l_ds_a.cb_r.credit <= 0;
 	
 	received = checker.check_results(n_ds_a.cb_r.data, n_ds_a.cb_r.enable, test.delayed_outputs[c.NORTH -1], c.NORTH, env);
-	if( received ) n_ds_a.cb_r.credit <= 1;
+	if( received ) begin
+		n_ds_a.cb_r.credit <= 1;
+		test.credits[0]++;
+	end
 	
 	received = checker.check_results(s_ds_a.cb_r.data, s_ds_a.cb_r.enable, test.delayed_outputs[c.SOUTH -1], c.SOUTH, env);
-	if( received ) s_ds_a.cb_r.credit <= 1;
-	
+	if( received ) begin
+		s_ds_a.cb_r.credit <= 1;
+		test.credits[1]++;
+	end
 	received = checker.check_results(e_ds_a.cb_r.data, e_ds_a.cb_r.enable, test.delayed_outputs[c.EAST -1], c.EAST, env);
-	if( received ) e_ds_a.cb_r.credit <= 1;
-	
+	if( received ) begin 
+		e_ds_a.cb_r.credit <= 1;
+		test.credits[2]++;
+	end
 	received = checker.check_results(w_ds_a.cb_r.data, w_ds_a.cb_r.enable, test.delayed_outputs[c.WEST -1], c.WEST, env);
-	if( received ) w_ds_a.cb_r.credit <= 1;
-	
+	if( received ) begin
+		w_ds_a.cb_r.credit <= 1;
+		test.credits[3]++;
+	end
 	received = checker.check_results(l_ds_a.cb_r.data, l_ds_a.cb_r.enable, test.delayed_outputs[c.LOCAL -1], c.LOCAL, env);
-	if( received ) l_ds_a.cb_r.credit <= 1;
-	
+	if( received ) begin
+		l_ds_a.cb_r.credit <= 1;
+		test.credits[4]++;
+	end
 	$display("--------------------------------------");
 
     endtask
@@ -197,6 +208,7 @@ program tb_router (	ifc n_ds_a, ifc n_ds_b,
         		test.message_counter[2],test.message_counter[3],
         		test.message_counter[4]
         	);
+        $display("Credits: %d %d %d %d %d", test.credits[0],test.credits[1],test.credits[2],test.credits[3],test.credits[4]);
         $display("\n\n----%d cycles completed succesfully ----\n\n", env.cycle);
     end
 endprogram
