@@ -1,11 +1,15 @@
 module router#(	parameter XCOORD = 1111,
-		parameter YCOORD = 1111)
+		parameter YCOORD = 1111 )
 (
-	ifc.router N_ifc,
-	ifc.router E_ifc,
-	ifc.router W_ifc,
-	ifc.router L_ifc,
-	ifc.control control
+	ifc_a N_ifc_a,
+	ifc_a N_ifc_b,
+	ifc_a E_ifc_a,
+	ifc_a E_ifc_b,
+	ifc_a W_ifc_a,
+	ifc_a W_ifc_b,
+	ifc_a L_ifc_a,
+	ifc_a L_ifc_b,
+	ifc_a.control control
 );
 
 //wires
@@ -55,8 +59,8 @@ wire [2:0] L_port_select;
 
 	inputPort nInPort(.clk(control.clk),
 				.rst(control.rst), 
-				.data_i(N_ifc.data_i), 
-				.write_en(N_ifc.valid_i),
+				.data_i(N_ifc_b.data), 
+				.write_en(N_ifc_b.enable),
 				.shift(N_pop),
 				.data_o(N_rcvd_data),
 				.read_valid_o(N_rcvd_valid));
@@ -65,16 +69,16 @@ wire [2:0] L_port_select;
 				.rst(control.rst),
 				.data_i(N_send_data),
 				.port_en(N_send_enable),
-				.inc_credit_i(N_ifc.credit_i),
-				.data_o(N_ifc.data_o),
-				.send_data(N_ifc.enable_o),
+				.inc_credit_i(N_ifc_a.credit),
+				.data_o(N_ifc_a.data),
+				.send_data(N_ifc_a.enable),
 				.full(N_full));
 
 
 	inputPort eInPort(.clk(control.clk),
 				.rst(control.rst), 
-				.data_i(E_ifc.data_i), 
-				.write_en(E_ifc.valid_i),
+				.data_i(E_ifc_b.data), 
+				.write_en(E_ifc_b.enable),
 				.shift(E_pop),
 				.data_o(E_rcvd_data),
 				.read_valid_o(E_rcvd_valid));
@@ -83,15 +87,16 @@ wire [2:0] L_port_select;
 				.rst(control.rst),
 				.data_i(E_send_data),
 				.port_en(E_send_enable),
-				.inc_credit_i(E_ifc.credit_i),
-				.data_o(E_ifc.data_o),
-				.send_data(E_ifc.enable_o),
+				.inc_credit_i(E_ifc_a.credit),
+				.data_o(E_ifc_a.data),
+				.send_data(E_ifc_a.enable),
 				.full(E_full));
+
 
 	inputPort wInPort(.clk(control.clk),
 				.rst(control.rst), 
-				.data_i(W_ifc.data_i), 
-				.write_en(W_ifc.valid_i),
+				.data_i(W_ifc_b.data), 
+				.write_en(W_ifc_b.enable),
 				.shift(W_pop),
 				.data_o(W_rcvd_data),
 				.read_valid_o(W_rcvd_valid));
@@ -100,16 +105,16 @@ wire [2:0] L_port_select;
 				.rst(control.rst),
 				.data_i(W_send_data),
 				.port_en(W_send_enable),
-				.inc_credit_i(W_ifc.credit_i),
-				.data_o(W_ifc.data_o),
-				.send_data(W_ifc.enable_o),
+				.inc_credit_i(W_ifc_a.credit),
+				.data_o(W_ifc_a.data),
+				.send_data(W_ifc_a.enable),
 				.full(W_full));
 
 
 inputPort lInPort(.clk(control.clk),
 			.rst(control.rst), 
-			.data_i(L_ifc.data_i), 
-			.write_en(L_ifc.valid_i),
+			.data_i(L_ifc_b.data), 
+			.write_en(L_ifc_b.enable),
 			.shift(L_pop),
 			.data_o(L_rcvd_data),
 			.read_valid_o(L_rcvd_valid));
@@ -118,31 +123,32 @@ outputPort lOutPort(.clk(control.clk),
 			.rst(control.rst),
 			.data_i(L_send_data),
 			.port_en(L_send_enable),
-			.inc_credit_i(L_ifc.credit_i),
-			.data_o(L_ifc.data_o),
-			.send_data(L_ifc.enable_o),
+			.inc_credit_i(L_ifc_a.credit),
+			.data_o(L_ifc_a.data),
+			.send_data(L_ifc_a.enable),
 			.full(L_full));
 
 
 //Routing Logic
-routeLogic#(.XCOORD(XCOORD), .YCOORD(YCOORD)) route
+routeLogic#(.XCOORD(XCOORD), .YCOORD(YCOORD),
+		.NORTH(1), .SOUTH(0), .EAST(1), .WEST(1)) route
 (		.N_data_i(N_rcvd_data[7:0]),
-		.S_data_i(0),
+		.S_data_i('0),
 		.E_data_i(E_rcvd_data[7:0]),
 		.W_data_i(W_rcvd_data[7:0]),
 		.L_data_i(L_rcvd_data[7:0]),
 		.N_valid_i(N_rcvd_valid),
-		.S_valid_i(0),
+		.S_valid_i('0),
 		.E_valid_i(E_rcvd_valid),
 		.W_valid_i(W_rcvd_valid),
 		.L_valid_i(L_rcvd_valid),
 		.N_port_full(N_full),
-		.S_port_full(0),
+		.S_port_full('0),
 		.E_port_full(E_full),
 		.W_port_full(W_full),
 		.L_port_full(L_full),
 		.N_turn(N_turn),
-		.S_turn(0),
+		.S_turn('0),
 		.E_turn(E_turn),
 		.W_turn(W_turn),
 		.L_turn(L_turn),
@@ -161,11 +167,11 @@ routeLogic#(.XCOORD(XCOORD), .YCOORD(YCOORD)) route
 		.E_port_enable(E_send_enable),
 		.W_port_enable(W_send_enable),
 		.L_port_enable(L_send_enable),
-		.N_credit_inc(N_ifc.credit_o),
+		.N_credit_inc(N_ifc_b.credit),
 		.S_credit_inc(),
-		.E_credit_inc(E_ifc.credit_o),
-		.W_credit_inc(W_ifc.credit_o),
-		.L_credit_inc(L_ifc.credit_o));
+		.E_credit_inc(E_ifc_b.credit),
+		.W_credit_inc(W_ifc_a.credit),
+		.L_credit_inc(L_ifc_a.credit));
 
 //Arbiter
 arbiter arb(.clk(control.clk), 
@@ -180,7 +186,7 @@ arbiter arb(.clk(control.clk),
 //Switch
 crossbarSwitch switch (
 			.N_data_i(N_rcvd_data),
-			.S_data_i(0),
+			.S_data_i('0),
 			.E_data_i(E_rcvd_data),
 			.W_data_i(W_rcvd_data),
 			.L_data_i(L_rcvd_data),
