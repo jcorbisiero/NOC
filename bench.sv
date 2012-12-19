@@ -429,9 +429,9 @@ class router_test;
 			handle_input(c.LOCAL, header_l);
         	end	
         	
-        	//L_input_buff.print();
+        	L_input_buff.print();
         	//N_input_buff.print();
-        	E_input_buff.print();
+        	//E_input_buff.print();
         	$display("%d",delayed_outputs[0]);
         	$display("%d",delayed_outputs[1]);
         	$display("%d",delayed_outputs[2]);
@@ -553,7 +553,7 @@ class router_checker;	//checker class
 	
 	Constants c;	
 	
-	function void check_results(int data_o, int enable_o, int value, int dir, router_env env);
+	function int check_results(int data_o, int enable_o, int value, int dir, router_env env);
 		
 		if( enable_o || value != -1) begin
 			$display("%d DUT Data_o: %d, enable_o: %d",
@@ -564,7 +564,9 @@ class router_checker;	//checker class
 				$display("ERROR at cycle %d", env.cycle);
 				$exit();
 			end
+			return 1;
 		end
+		return 0;
 	endfunction  
 endclass
 
@@ -635,8 +637,13 @@ class router_transaction;
 
 endclass
 
-program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
-		ifc.bench w_ds,ifc.bench l_ds,ifc.bench ctrl_ds);
+program tb (	ifc_a n_ds_a, ifc_a n_ds_b,
+		ifc_a s_ds_a, ifc_a s_ds_b,
+		ifc_a e_ds_a, ifc_a e_ds_b,
+		ifc_a w_ds_a, ifc_a w_ds_b,
+		ifc_a l_ds_a, ifc_a l_ds_b,
+		ifc_a ctrl_ds
+	);
 		
     router_test test;
     router_transaction packet; 
@@ -646,6 +653,7 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
     
     /*Temp variables*/
     logic [15:0] header;
+    int received;
     
     Constants c;
 
@@ -657,9 +665,9 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         	packet.randomize();
         	
         	test.rst <= 1;
-		ctrl_ds.cb.rst <= 1;
+		ctrl_ds.cb_s.rst <= 1;
         
-        	@(ctrl_ds.cb);
+        	@(ctrl_ds.cb_s);
 
         	test.golden_result(0);
 	
@@ -668,28 +676,28 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 	task activate_message(int input_port, logic [15:0] header_l);
 
 		if( input_port == c.NORTH ) begin
-			n_ds.cb.valid_i <= 1;
-			n_ds.cb.data_i <= header_l;
+			n_ds_b.cb_s.enable <= 1;
+			n_ds_b.cb_s.data <= header_l;
 			test.inputs[c.NORTH - 1] = header_l;
 		end
 		else if( input_port == c.SOUTH ) begin
-			s_ds.cb.valid_i <= 1;
-			s_ds.cb.data_i <= header_l;
+			s_ds_b.cb_s.enable <= 1;
+			s_ds_b.cb_s.data <= header_l;
 			test.inputs[c.SOUTH - 1] = header_l;
 		end
 		else if( input_port == c.EAST ) begin
-			e_ds.cb.valid_i <= 1;
-			e_ds.cb.data_i <= header_l;
+			e_ds_b.cb_s.enable <= 1;
+			e_ds_b.cb_s.data <= header_l;
 			test.inputs[c.EAST - 1] = header_l;
 		end
 		else if( input_port == c.WEST ) begin
-			w_ds.cb.valid_i <= 1;
-			w_ds.cb.data_i <= header_l;
+			w_ds_b.cb_s.enable <= 1;
+			w_ds_b.cb_s.data <= header_l;
 			test.inputs[c.WEST - 1] = header_l;
 		end
 		else if( input_port == c.LOCAL ) begin
-			l_ds.cb.valid_i <= 1;
-			l_ds.cb.data_i <= header_l;
+			l_ds_b.cb_s.enable <= 1;
+			l_ds_b.cb_s.data <= header_l;
 			test.inputs[c.LOCAL - 1] = header_l;
 		end
 		else begin
@@ -707,16 +715,16 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         test.clear_delayed_output();
         
         //Reset inputs to DUT
-        n_ds.cb.valid_i <= 0;
-	n_ds.cb.data_i <= 0;
-	s_ds.cb.valid_i <= 0;
-	s_ds.cb.data_i <= 0;
-	e_ds.cb.valid_i <= 0;
-	e_ds.cb.data_i <= 0;
-	w_ds.cb.valid_i <= 0;
-	w_ds.cb.data_i <= 0;
-	l_ds.cb.valid_i <= 0;
-	l_ds.cb.data_i <= 0;        
+        n_ds_b.cb_s.enable 	<= 0;
+	n_ds_b.cb_s.data 	<= 0;
+	s_ds_b.cb_s.enable 	<= 0;
+	s_ds_b.cb_s.data 	<= 0;
+	e_ds_b.cb_s.enable 	<= 0;
+	e_ds_b.cb_s.data 	<= 0;
+	w_ds_b.cb_s.enable 	<= 0;
+	w_ds_b.cb_s.data 	<= 0;
+	l_ds_b.cb_s.enable 	<= 0;
+	l_ds_b.cb_s.data	<= 0;        
         
         header = { 8'b00000000 , packet.x, packet.y };
         
@@ -728,13 +736,7 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 	
 	
 	test.rst 	<= (packet.rst < env.reset_density);
-        ctrl_ds.cb.rst 	<= (packet.rst < env.reset_density);
-        
-	n_ds.cb.credit_i <= 1;
-	s_ds.cb.credit_i <= 1;
-	e_ds.cb.credit_i <= 1;
-	w_ds.cb.credit_i <= 1;
-	l_ds.cb.credit_i <= 1;
+        ctrl_ds.cb_s.rst <= (packet.rst < env.reset_density);
         
         //if( packet.rst > 7) begin
         	if( env.input1_active ) begin
@@ -759,9 +761,37 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 	        activate_message(packet.input_port5,header);
         end 
         
-        @(ctrl_ds.cb);
+        @(ctrl_ds.cb_s);
         
         test.golden_result(header);
+        
+	$display("------------------------------------------");
+	$display("CHECKING");
+	
+	/*Reset credit inputs -- here because good values to to go
+		through @(ctrl_ds.cb_s) */
+	n_ds_a.cb_r.credit <= 0;
+	s_ds_a.cb_r.credit <= 0;
+	e_ds_a.cb_r.credit <= 0;
+	w_ds_a.cb_r.credit <= 0;
+	l_ds_a.cb_r.credit <= 0;
+	
+	received = checker.check_results(n_ds_a.cb_r.data, n_ds_a.cb_r.enable, test.delayed_outputs[c.NORTH -1], c.NORTH, env);
+	if( received ) n_ds_a.cb_r.credit <= 1;
+	
+	received = checker.check_results(s_ds_a.cb_r.data, s_ds_a.cb_r.enable, test.delayed_outputs[c.SOUTH -1], c.SOUTH, env);
+	if( received ) s_ds_a.cb_r.credit <= 1;
+	
+	received = checker.check_results(e_ds_a.cb_r.data, e_ds_a.cb_r.enable, test.delayed_outputs[c.EAST -1], c.EAST, env);
+	if( received ) e_ds_a.cb_r.credit <= 1;
+	
+	received = checker.check_results(w_ds_a.cb_r.data, w_ds_a.cb_r.enable, test.delayed_outputs[c.WEST -1], c.WEST, env);
+	if( received ) w_ds_a.cb_r.credit <= 1;
+	
+	received = checker.check_results(l_ds_a.cb_r.data, l_ds_a.cb_r.enable, test.delayed_outputs[c.LOCAL -1], c.LOCAL, env);
+	if( received ) l_ds_a.cb_r.credit <= 1;
+	
+	$display("--------------------------------------");
 
     endtask
 
@@ -786,16 +816,6 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         // testing
         repeat (env.max_transactions) begin
             do_cycle();
-        
-        	$display("------------------------------------------");
-        	$display("CHECKING");
-		//$display("%b %b", s_ds.cb.data_o, s_ds.cb.enable_o);
-		checker.check_results(n_ds.cb.data_o, n_ds.cb.enable_o, test.delayed_outputs[c.NORTH -1], c.NORTH, env);
-		checker.check_results(s_ds.cb.data_o, s_ds.cb.enable_o, test.delayed_outputs[c.SOUTH -1], c.SOUTH, env);
-		checker.check_results(e_ds.cb.data_o, e_ds.cb.enable_o, test.delayed_outputs[c.EAST -1], c.EAST, env);
-		checker.check_results(w_ds.cb.data_o, w_ds.cb.enable_o, test.delayed_outputs[c.WEST -1], c.WEST, env);
-		checker.check_results(l_ds.cb.data_o, l_ds.cb.enable_o, test.delayed_outputs[c.LOCAL -1], c.LOCAL, env);
-		$display("--------------------------------------");
         end
         
         $display("\n\n----%d cycles completed succesfully ----\n\n", env.cycle);

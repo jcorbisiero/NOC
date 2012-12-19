@@ -6,8 +6,20 @@ interface ifc_a(input bit clk);
 	logic [15:0] data;
 	logic credit;
   	
-	clocking cb @(negedge clk);
-		output rst;
+	clocking cb_s @(negedge clk);
+		output posedge rst;
+
+		output posedge enable;
+		output posedge data;
+		input posedge credit;
+  	endclocking
+  	
+  	clocking cb_r @(negedge clk);
+		output posedge rst;
+
+		input negedge enable;
+		input negedge data;
+		output negedge credit;
   	endclocking
 
   	modport send (  		
@@ -28,6 +40,6 @@ interface ifc_a(input bit clk);
 		input rst
 	);
 	
-	modport bench (clocking cb);
+	modport bench (clocking cb_s, clocking cb_r);
 
 endinterface

@@ -13,7 +13,7 @@ interface ifc(input bit clk);
 	logic credit_o;
 
 	clocking cb @(negedge clk);
-		output rst;
+		output posedge rst;
 	
     		output posedge valid_i;
     		output posedge data_i;

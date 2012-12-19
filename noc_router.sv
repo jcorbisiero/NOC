@@ -2,15 +2,15 @@ module router#(	parameter XCOORD = 1111,
 		parameter YCOORD = 1111 )
 (
 	ifc_a N_ifc_a,
-	ifc_b N_ifc_b,
+	ifc_a N_ifc_b,
 	ifc_a S_ifc_a,
-	ifc_b S_ifc_b,
+	ifc_a S_ifc_b,
 	ifc_a E_ifc_a,
-	ifc_b E_ifc_b,
+	ifc_a E_ifc_b,
 	ifc_a W_ifc_a,
-	ifc_b W_ifc_b,
+	ifc_a W_ifc_b,
 	ifc_a L_ifc_a,
-	ifc_b L_ifc_b,
+	ifc_a L_ifc_b,
 	ifc_a.control control
 );
 
@@ -87,8 +87,8 @@ wire [2:0] L_port_select;
 
 	inputPort sInPort(.clk(control.clk),
 				.rst(control.rst), 
-				.data_i(S_ifc_a.data), 
-				.write_en(S_ifc_a.enable),
+				.data_i(S_ifc_b.data), 
+				.write_en(S_ifc_b.enable),
 				.shift(S_pop),
 				.data_o(S_rcvd_data),
 				.read_valid_o(S_rcvd_valid));
@@ -97,9 +97,9 @@ wire [2:0] L_port_select;
 				.rst(control.rst),
 				.data_i(S_send_data),
 				.port_en(S_send_enable),
-				.inc_credit_i(S_ifc_b.credit),
-				.data_o(S_ifc_b.data),
-				.send_data(S_ifc_b.enable),
+				.inc_credit_i(S_ifc_a.credit),
+				.data_o(S_ifc_a.data),
+				.send_data(S_ifc_a.enable),
 				.full(S_full));
 
 
@@ -123,8 +123,8 @@ wire [2:0] L_port_select;
 
 	inputPort wInPort(.clk(control.clk),
 				.rst(control.rst), 
-				.data_i(W_ifc_a.data), 
-				.write_en(W_ifc_a.enable),
+				.data_i(W_ifc_b.data), 
+				.write_en(W_ifc_b.enable),
 				.shift(W_pop),
 				.data_o(W_rcvd_data),
 				.read_valid_o(W_rcvd_valid));
@@ -133,16 +133,16 @@ wire [2:0] L_port_select;
 				.rst(control.rst),
 				.data_i(W_send_data),
 				.port_en(W_send_enable),
-				.inc_credit_i(W_ifc_b.credit),
-				.data_o(W_ifc_b.data),
-				.send_data(W_ifc_b.enable),
+				.inc_credit_i(W_ifc_a.credit),
+				.data_o(W_ifc_a.data),
+				.send_data(W_ifc_a.enable),
 				.full(W_full));
 
 
 inputPort lInPort(.clk(control.clk),
 			.rst(control.rst), 
-			.data_i(L_ifc_a.data), 
-			.write_en(L_ifc_a.enable),
+			.data_i(L_ifc_b.data), 
+			.write_en(L_ifc_b.enable),
 			.shift(L_pop),
 			.data_o(L_rcvd_data),
 			.read_valid_o(L_rcvd_valid));
@@ -151,9 +151,9 @@ outputPort lOutPort(.clk(control.clk),
 			.rst(control.rst),
 			.data_i(L_send_data),
 			.port_en(L_send_enable),
-			.inc_credit_i(L_ifc_b.credit),
-			.data_o(L_ifc_b.data),
-			.send_data(L_ifc_b.enable),
+			.inc_credit_i(L_ifc_a.credit),
+			.data_o(L_ifc_a.data),
+			.send_data(L_ifc_a.enable),
 			.full(L_full));
 
 
