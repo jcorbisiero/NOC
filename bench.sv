@@ -20,7 +20,7 @@ endclass
 class arbiter;
 	
 	Constants c;
-	int turns [4:0];
+	logic [4:0] turns [4:0];
 	
 	/*Temporary variables*/
 	int bitmask;
@@ -46,6 +46,7 @@ class arbiter;
 		bitmask = c.BITMASKS[inputPort - 1];
 		
 		$display("Bitmask: %b Turns[OP-1]:%b", bitmask,turns[outputPort-1]);
+		$display("Input: %d	Output:%d", inputPort, outputPort);
 		
 		/* Check if the inputPorts turn */
 		if( turns[outputPort - 1] & bitmask) begin
@@ -57,6 +58,7 @@ class arbiter;
 	endfunction
 	
 	function advance();
+	
 		/*North*/
 		turns[0] = turns[0] >> 1;
 		if( turns[0] == 5'b00000) turns[0] = 5'b01000;
@@ -78,7 +80,9 @@ class arbiter;
 		
 		/*Local*/
 		turns[4] = turns[4] >> 1;
-		if( turns[4] == 5'b0001) turns[4] = 5'b10000;
+		if( turns[4] == 5'b00001) turns[4] = 5'b10000;
+		
+		$display("Arbiter: %b %b %b %b %b", turns[0],turns[1],turns[2],turns[3], turns[4]);
 		
 	endfunction
 
@@ -200,8 +204,11 @@ class router_test;
 		L_input_buff.clear();
 		L_output_buff.clear();
 		
-		/*Output values*/
-		clear_output();
+		/*Clear Output values*/
+		clear_delayed_output();
+		
+		/*Clear temp values*/
+		reset_output();
 		
 		/*Credits */
 		reset_credits();
@@ -217,7 +224,15 @@ class router_test;
 		inputs[4] = -1;
 	endfunction
 	
-	function void clear_output();
+	function void clear_delayed_output();
+		delayed_outputs[0] = -1;
+		delayed_outputs[1] = -1;
+		delayed_outputs[2] = -1;
+		delayed_outputs[3] = -1;
+		delayed_outputs[4] = -1;
+	endfunction
+	
+	function void reset_output();
 		outputs[0] = -1;
 		outputs[1] = -1;
 		outputs[2] = -1;
@@ -288,8 +303,8 @@ class router_test;
 		input_buff = get_input_buffer(inputPort);
 		assert( input_buff.dir == inputPort );
 		if( input_buff.isEmpty() ) begin
-			$display("INPUT BUFFER was empty for %s. Returning",
-				input_buff.name);
+			$display("INPUT BUFFER was empty for %s %d. Returning",
+				input_buff.name, input_buff.index);
 			return;
 		end		
 		
@@ -371,6 +386,24 @@ class router_test;
 			return;
 		end
 		
+		/*--Work backwards-- */
+		/* First check output*/
+		/* Then advance all buffers*/
+		/* Last, add new input to buffers*/
+		
+		/*Move output to special buffers for Checker*/
+        	move_outputs();
+        	
+        	/* NOC seems to advance arbiter before inputs*/
+        	/* IS THIS CORRECT? */
+              	arbiter.advance();
+        	
+        	advance_inputPort(c.NORTH);
+        	advance_inputPort(c.SOUTH);
+        	advance_inputPort(c.EAST);
+        	advance_inputPort(c.WEST);
+        	advance_inputPort(c.LOCAL);
+        	
 		if( inputs[c.NORTH - 1] != -1 ) begin
 			handle_input(c.NORTH, header_l);
 		end
@@ -385,22 +418,14 @@ class router_test;
 		end
 		if( inputs[c.LOCAL - 1] != -1) begin
 			handle_input(c.LOCAL, header_l);
-        	end
-        	
-        	advance_inputPort(c.NORTH);
-        	advance_inputPort(c.SOUTH);
-        	advance_inputPort(c.EAST);
-        	advance_inputPort(c.WEST);
-        	advance_inputPort(c.LOCAL);
-        	
-        	arbiter.advance();	
+        	end	
         	
         	L_input_buff.print();
-        	$display("%d",outputs[0]);
-        	$display("%d",outputs[1]);
-        	$display("%d",outputs[2]);
-        	$display("%d",outputs[3]);
-        	$display("%d",outputs[4]);
+        	$display("%d",delayed_outputs[0]);
+        	$display("%d",delayed_outputs[1]);
+        	$display("%d",delayed_outputs[2]);
+        	$display("%d",delayed_outputs[3]);
+        	$display("%d",delayed_outputs[4]);
         
     endfunction
     
@@ -410,6 +435,12 @@ class router_test;
 	delayed_outputs[2] = outputs[2];
 	delayed_outputs[3] = outputs[3];
 	delayed_outputs[4] = outputs[4];
+	
+	outputs[0] = -1;
+	outputs[1] = -1;
+	outputs[2] = -1;
+	outputs[3] = -1;
+	outputs[4] = -1;
     endfunction
     
     function void print_outputs();
@@ -425,7 +456,7 @@ class router_checker;	//checker class
 	
 	function void check_results(int data_o, int enable_o, int value, int dir);
 		
-		if( enable_o || value != -1 ) begin
+		if( enable_o || value != -1) begin
 			$display("%d DUT Data_o: %d, enable_o: %d",
 				dir, data_o, enable_o);
 			$display("%d TST Data_o: %d",
@@ -652,11 +683,8 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         packet = new(env);
         packet.randomize();
         
-        /*For delay -- prob not the right place*/        
-        test.move_outputs();
-        
         test.clear_input();
-        test.clear_output();
+        test.clear_delayed_output();
         
         //Reset inputs to DUT
         n_ds.cb.valid_i <= 0;

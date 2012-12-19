@@ -55,7 +55,7 @@ module routeLogic #(parameter XCOORD = 1111, parameter YCOORD = 1111)
 always_comb begin
 
 $display("----- Routing Logic -------");
-$display(" %d %d %d %d ", N_valid_i, S_valid_i,E_valid_i, W_valid_i, L_valid_i);
+$display("%d %d %d %d %d", N_valid_i, S_valid_i,E_valid_i, W_valid_i, L_valid_i);
 $display("L_port_remove: %d", L_port_remove);
 
 N_port_enable = 0;
