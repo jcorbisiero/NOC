@@ -205,11 +205,10 @@ class router_test;
 		L_input_buff.clear();
 		L_output_buff.clear();
 		
-		/*Clear Output values*/
-		clear_delayed_output();
-		
 		/*Clear temp values*/
 		reset_output();
+		
+		clear_input();
 		
 		/*Credits */
 		reset_credits();
@@ -321,6 +320,13 @@ class router_test;
 			input_buff.pop();
 			return;
 		end
+		if( (input_buff.dir == c.EAST || input_buff.dir == c.WEST) &&
+			header[3:0] != YCOORD ) begin
+			$display("Illegal port for %s (Attempt to send to %s)",
+				input_buff.name, output_buff.name);
+			input_buff.pop();
+			return;
+		end
 		if( output_buff.isFull() ) begin
 			$display("OUTPUT BUFFER is full -- %s. Returning",
 					output_buff.name);
@@ -381,6 +387,9 @@ class router_test;
 	//golden result
 	function void golden_result(logic [15:0] header_l);
 		
+		/*Move output to special buffers for Checker*/
+        	move_outputs();
+		
 		if (rst) begin
 			reset();
 			$display("Resetting golden model");
@@ -397,13 +406,6 @@ class router_test;
 		E_full = E_input_buff.isFull();
 		W_full = W_input_buff.isFull();
 		L_full = L_input_buff.isFull();
-		
-		/*Move output to special buffers for Checker*/
-        	move_outputs();
-        	
-        	/* NOC seems to advance arbiter before inputs*/
-        	/* IS THIS CORRECT? */
-              	arbiter.advance();
         	
         	advance_inputPort(c.NORTH);
         	advance_inputPort(c.SOUTH);
@@ -427,12 +429,19 @@ class router_test;
 			handle_input(c.LOCAL, header_l);
         	end	
         	
-        	L_input_buff.print();
+        	//L_input_buff.print();
+        	//N_input_buff.print();
+        	E_input_buff.print();
         	$display("%d",delayed_outputs[0]);
         	$display("%d",delayed_outputs[1]);
         	$display("%d",delayed_outputs[2]);
         	$display("%d",delayed_outputs[3]);
         	$display("%d",delayed_outputs[4]);
+        	
+		/* Based on negedge/posedge rst -- this comes
+		 before or after advance_inputPort*/
+		/* IS THIS CORRECT? */
+              	arbiter.advance();
         
     endfunction
     

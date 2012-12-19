@@ -211,7 +211,7 @@ L_port_remove = 0;
  		$display("Edata x: %b", E_data_i[7:4]);
 	       $display("Edata y: %b", E_data_i[3:0]);
 
-		if (E_data_i[7:4] < XCOORD) begin
+		if (E_data_i[7:4] < XCOORD && E_data_i[3:0] == YCOORD) begin
 			assert(WEST);
 			if (!WEST) $exit();
 			if (!W_port_full && (W_turn == 5'b00100)) begin
@@ -220,11 +220,13 @@ L_port_remove = 0;
 				W_port_enable = 1;
 				E_credit_inc = 1;
 			end
-		end else if (!L_port_full && (L_turn == 5'b00100) && E_data_i[7:4] == XCOORD) begin
-			L_port_select = 010;
-			E_port_remove = 1;
-			L_port_enable = 1;
-			E_credit_inc = 1;
+		end else if (E_data_i[7:4] == XCOORD && E_data_i[3:0] == YCOORD) begin
+			if(!L_port_full && (L_turn == 5'b00100)) begin
+				L_port_select = 010;
+				E_port_remove = 1;
+				L_port_enable = 1;
+				E_credit_inc = 1;
+			end
 		end else begin
 			$display("Dropping packet sent to East");
 			E_port_remove = 1;
@@ -246,7 +248,7 @@ L_port_remove = 0;
 		//assert(W_data_i[3:0] == YCOORD);
 		//assert(!(W_data_i[7:4] < XCOORD));
 
-		if (W_data_i[7:4] > XCOORD) begin
+		if (W_data_i[7:4] > XCOORD && W_data_i[3:0] == YCOORD) begin
 			assert(EAST);
 			if (!EAST) $exit();
 			if ((!E_port_full) && (E_turn == 5'b00010)) begin
@@ -263,11 +265,13 @@ L_port_remove = 0;
 		 * because it is local's turn. it should only go local if it's local's turn and the
 		 * coordinate of the packet is to go local. Done for other ports as well
 		 */
-		else if (!L_port_full && (L_turn == 5'b00010)  && W_data_i[7:4] == XCOORD) begin
-			L_port_select = 011;
-			W_port_remove = 1;
-			L_port_enable = 1;
-			W_credit_inc = 1;
+		else if (W_data_i[7:4] == XCOORD && W_data_i[3:0] == YCOORD) begin
+			if(!L_port_full && (L_turn == 5'b00010)) begin
+				L_port_select = 011;
+				W_port_remove = 1;
+				L_port_enable = 1;
+				W_credit_inc = 1;
+			end
 		end else begin
 			$display("Dropping packet sent to West");
 			W_port_remove = 1;
