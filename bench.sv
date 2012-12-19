@@ -501,8 +501,6 @@ class router_env;
             end
             else if("RESET_DENSITY" == param) begin
             	this.reset_density = value;
-            	$display("Reset density: %d",value);
-            	$exit();
             end
             else if("INPUT1" == param) begin
             	$display("In input1");
