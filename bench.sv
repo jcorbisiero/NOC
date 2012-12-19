@@ -187,6 +187,7 @@ class router_test;
 	logic [15:0] header;
 	int dir_to_send;
 	int is_turn;
+	int N_full, S_full, W_full, E_full, L_full;
 	
 	function void reset();
 		
@@ -391,6 +392,12 @@ class router_test;
 		/* Then advance all buffers*/
 		/* Last, add new input to buffers*/
 		
+		N_full = N_input_buff.isFull();
+		S_full = S_input_buff.isFull();
+		E_full = E_input_buff.isFull();
+		W_full = W_input_buff.isFull();
+		L_full = L_input_buff.isFull();
+		
 		/*Move output to special buffers for Checker*/
         	move_outputs();
         	
@@ -404,19 +411,19 @@ class router_test;
         	advance_inputPort(c.WEST);
         	advance_inputPort(c.LOCAL);
         	
-		if( inputs[c.NORTH - 1] != -1 ) begin
+		if( inputs[c.NORTH - 1] != -1 && !N_full) begin
 			handle_input(c.NORTH, header_l);
 		end
-		if( inputs[c.SOUTH - 1] != -1 ) begin
+		if( inputs[c.SOUTH - 1] != -1 && !S_full) begin
 			handle_input(c.SOUTH, header_l);
 		end
-		if( inputs[c.EAST - 1] != -1) begin
+		if( inputs[c.EAST - 1] != -1 && !E_full) begin
 			handle_input(c.EAST, header_l);
 		end
-		if( inputs[c.WEST - 1] != -1) begin
+		if( inputs[c.WEST - 1] != -1 && !W_full) begin
 			handle_input(c.WEST, header_l);
 		end
-		if( inputs[c.LOCAL - 1] != -1) begin
+		if( inputs[c.LOCAL - 1] != -1 && !L_full) begin
 			handle_input(c.LOCAL, header_l);
         	end	
         	
@@ -720,12 +727,12 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 	w_ds.cb.credit_i <= 1;
 	l_ds.cb.credit_i <= 1;
         
-        if( packet.rst > 7) begin
+        //if( packet.rst > 7) begin
         	if( env.input1_active ) begin
         		$display("Activating port 1");
         		activate_message(packet.input_port1,header);
         	end 
-        end
+        //end
         if( env.input2_active ) begin
         	$display("Activating port 2");
 	        activate_message(packet.input_port2,header);

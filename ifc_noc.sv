@@ -15,13 +15,13 @@ interface ifc(input bit clk);
 	clocking cb @(negedge clk);
 		output rst;
 	
-    		output valid_i;
-    		output data_i;
-    		output credit_i;
+    		output posedge valid_i;
+    		output posedge data_i;
+    		output posedge credit_i;
 
-		input data_o;    		
-    		input enable_o;
-		input credit_o;
+		input negedge data_o;    		
+    		input negedge enable_o;
+		input negedge credit_o;
   	endclocking
 
   	modport router (  		

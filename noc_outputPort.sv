@@ -63,7 +63,7 @@ $display("----- OutputPort -------");
 		push_n = 1;
 	end
 
-	$display("Empty:%d, Count:%d", 
+	$display("Data_o: %d Empty:%d, Count:%d", 
 			data_o,empty,count);
 
 	if (!empty && count != 0) begin
