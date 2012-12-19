@@ -63,7 +63,7 @@ $display("----- OutputPort -------");
 		push_n = 1;
 	end
 
-	if (!empty && count != 0) begin
+	if ((!empty && count != 0) || port_en) begin
 		$display("Pop 0 - %b", data_o);
 		pop_n = 0;
 		send_data = 1;
