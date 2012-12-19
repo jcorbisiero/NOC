@@ -1,8 +1,9 @@
 
-INTERFACE=ifc_noc.sv
+INTERFACE=ifc_a.sv ifc_b.sv
 BENCH=bench.sv
-NOC=noc.sv noc_router.sv top_noc.sv $(INTERFACE) $(MODULES) $(BENCH)
-ROUTER=noc_router.sv top_router.sv $(INTERFACE) $(MODULES) $(BENCH)
+NOC=noc.sv top_noc.sv $(INTERFACE) $(EDGE_ROUTERS) $(MODULES) #$(BENCH)
+EDGE_ROUTERS=noc_nw_router.sv noc_sw_router.sv noc_nedge_router.sv
+ROUTER=noc_router.sv top_router.sv $(INTERFACE) $(MODULES) #$(BENCH)
 MODULES=noc_inputPort.sv noc_outputPort.sv noc_arbiter.sv noc_routeLogic.sv noc_switch.sv
 LIB_DIR=/sim/synopsys64/icc/dw/sim_ver
 LIB_EXT=+libext+.v
