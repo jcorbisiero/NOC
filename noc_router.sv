@@ -158,7 +158,8 @@ outputPort lOutPort(.clk(control.clk),
 
 
 //Routing Logic
-routeLogic#(.XCOORD(XCOORD), .YCOORD(YCOORD)) route
+routeLogic#(.XCOORD(XCOORD), .YCOORD(YCOORD),
+		.NORTH(1), .SOUTH(1), .EAST(1), .WEST(1)) route
 (		.N_data_i(N_rcvd_data[7:0]),
 		.S_data_i(S_rcvd_data[7:0]),
 		.E_data_i(E_rcvd_data[7:0]),
