@@ -1,6 +1,6 @@
 //		`timescale 1ns/1ns
 
-module top();
+module top_router();
 	bit clk = 1;
 	always #5 clk = ~clk;
 
