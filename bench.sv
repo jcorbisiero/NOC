@@ -700,10 +700,7 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 	w_ds.cb.valid_i <= 0;
 	w_ds.cb.data_i <= 0;
 	l_ds.cb.valid_i <= 0;
-	l_ds.cb.data_i <= 0;
-        
-        test.rst 	<= (packet.rst < 10*env.reset_density);
-        ctrl_ds.cb.rst 	<= (packet.rst < 10*env.reset_density);
+	l_ds.cb.data_i <= 0;        
         
         header = { 8'b00000000 , packet.x, packet.y };
         
@@ -712,6 +709,16 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 		packet.x,packet.y,packet.rst,env.reset_density);
 
 	$display("Header: %b", header);
+	
+	
+	test.rst 	<= (packet.rst < 10*env.reset_density);
+        ctrl_ds.cb.rst 	<= (packet.rst < 10*env.reset_density);
+        
+	n_ds.cb.data_i <= 1;
+	s_ds.cb.data_i <= 1;
+	e_ds.cb.data_i <= 1;
+	w_ds.cb.data_i <= 1;
+	l_ds.cb.data_i <= 1;
         
         if( packet.rst > 7) begin
         	if( env.input1_active ) begin
