@@ -450,21 +450,6 @@ class router_test;
     endfunction
 endclass
 
-class router_checker;	//checker class
-	
-	Constants c;	
-	
-	function void check_results(int data_o, int enable_o, int value, int dir);
-		
-		if( enable_o || value != -1) begin
-			$display("%d DUT Data_o: %d, enable_o: %d",
-				dir, data_o, enable_o);
-			$display("%d TST Data_o: %d",
-				dir, value);
-		end
-	endfunction  
-endclass
-
 class router_env;
     int cycle = 0;
     int max_transactions = 20;
@@ -546,6 +531,25 @@ class router_env;
 	    end
         end
     endfunction
+endclass
+
+class router_checker;	//checker class
+	
+	Constants c;	
+	
+	function void check_results(int data_o, int enable_o, int value, int dir, router_env env);
+		
+		if( enable_o || value != -1) begin
+			$display("%d DUT Data_o: %d, enable_o: %d",
+				dir, data_o, enable_o);
+			$display("%d TST Data_o: %d",
+				dir, value);
+			if( data_o != value || !enable_o) begin
+				$display("ERROR at cycle %d", env.cycle);
+				$exit();
+			end
+		end
+	endfunction  
 endclass
 
 
@@ -763,11 +767,11 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
         	$display("------------------------------------------");
         	$display("CHECKING");
 		//$display("%b %b", s_ds.cb.data_o, s_ds.cb.enable_o);
-		checker.check_results(n_ds.cb.data_o, n_ds.cb.enable_o, test.delayed_outputs[c.NORTH -1], c.NORTH);
-		checker.check_results(s_ds.cb.data_o, s_ds.cb.enable_o, test.delayed_outputs[c.SOUTH -1], c.SOUTH);
-		checker.check_results(e_ds.cb.data_o, e_ds.cb.enable_o, test.delayed_outputs[c.EAST -1], c.EAST);
-		checker.check_results(w_ds.cb.data_o, w_ds.cb.enable_o, test.delayed_outputs[c.WEST -1], c.WEST);
-		checker.check_results(l_ds.cb.data_o, l_ds.cb.enable_o, test.delayed_outputs[c.LOCAL -1], c.LOCAL);
+		checker.check_results(n_ds.cb.data_o, n_ds.cb.enable_o, test.delayed_outputs[c.NORTH -1], c.NORTH, env);
+		checker.check_results(s_ds.cb.data_o, s_ds.cb.enable_o, test.delayed_outputs[c.SOUTH -1], c.SOUTH, env);
+		checker.check_results(e_ds.cb.data_o, e_ds.cb.enable_o, test.delayed_outputs[c.EAST -1], c.EAST, env);
+		checker.check_results(w_ds.cb.data_o, w_ds.cb.enable_o, test.delayed_outputs[c.WEST -1], c.WEST, env);
+		checker.check_results(l_ds.cb.data_o, l_ds.cb.enable_o, test.delayed_outputs[c.LOCAL -1], c.LOCAL, env);
 		$display("--------------------------------------");
         end
         
