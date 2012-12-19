@@ -714,11 +714,11 @@ program tb (ifc.bench n_ds,ifc.bench s_ds,ifc.bench e_ds,
 	test.rst 	<= (packet.rst < 10*env.reset_density);
         ctrl_ds.cb.rst 	<= (packet.rst < 10*env.reset_density);
         
-	n_ds.cb.data_i <= 1;
-	s_ds.cb.data_i <= 1;
-	e_ds.cb.data_i <= 1;
-	w_ds.cb.data_i <= 1;
-	l_ds.cb.data_i <= 1;
+	n_ds.cb.credit_i <= 1;
+	s_ds.cb.credit_i <= 1;
+	e_ds.cb.credit_i <= 1;
+	w_ds.cb.credit_i <= 1;
+	l_ds.cb.credit_i <= 1;
         
         if( packet.rst > 7) begin
         	if( env.input1_active ) begin
