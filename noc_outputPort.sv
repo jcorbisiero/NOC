@@ -39,7 +39,7 @@ always_comb begin
 $display("----- OutputPort -------");
 
 	if (rst) begin
-		count <= 3'b101;
+		count = 3'b101;
 		rst_n = 0;
 		send_data = 0;
 	end else begin
@@ -47,7 +47,7 @@ $display("----- OutputPort -------");
 	end
 
 	if (inc_credit_i) begin
-		count <= count + 1;
+		count = count + 1;
 		assert(count >= 0 && count <= 5);
 	end 
 
@@ -63,16 +63,20 @@ $display("----- OutputPort -------");
 		push_n = 1;
 	end
 
+	$display("Empty:%d, Count:%d", 
+			data_o,empty,count);
+
 	if (!empty && count != 0) begin
 		$display("Pop 0 - %b", data_o);
 		pop_n = 0;
 		send_data = 1;
-		count <= count - 1;
+		count = count - 1;
 		assert(count >= 0 && count <= 5);
 	end else begin
-		$display("Pop 1 - %b", data_o);
 		pop_n = 1;
 		send_data = 0;
+		$display("Pop 1 - %b", 
+			data_o);
 	end
 	
 	$display("Data_o - %b %d", data_o, send_data);

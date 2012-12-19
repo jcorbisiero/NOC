@@ -56,8 +56,8 @@ $display("----- Input Port -------");
 
 	if (shift) begin
 		assert(!empty);
-		$display("Popping in input -- Pop:%d, Empty:%d, Full:%d",
-			pop_n,empty,full);
+		$display("Popping in input -- Pop:%d, Empty:%d, Full:%d Shift:%d",
+			pop_n,empty,full,shift);
 		pop_n = 0;
 	end else begin
 		pop_n = 1;
