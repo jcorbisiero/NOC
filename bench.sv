@@ -45,8 +45,8 @@ class arbiter;
 		/*Get bitmask for proper port*/
 		bitmask = c.BITMASKS[inputPort - 1];
 		
-		$display("Bitmask: %b Turns[OP-1]:%b", bitmask,turns[outputPort-1]);
-		$display("Input: %d	Output:%d", inputPort, outputPort);
+		//$display("Bitmask: %b Turns[OP-1]:%b", bitmask,turns[outputPort-1]);
+		//$display("Input: %d	Output:%d", inputPort, outputPort);
 		
 		/* Check if the inputPorts turn */
 		if( turns[outputPort - 1] & bitmask) begin
@@ -82,7 +82,7 @@ class arbiter;
 		turns[4] = turns[4] >> 1;
 		if( turns[4] == 5'b00001) turns[4] = 5'b10000;
 		
-		$display("Arbiter: %b %b %b %b %b", turns[0],turns[1],turns[2],turns[3], turns[4]);
+		//$display("Arbiter: %b %b %b %b %b", turns[0],turns[1],turns[2],turns[3], turns[4]);
 		
 	endfunction
 
@@ -180,6 +180,8 @@ class router_test;
 	int inputs  [4:0];
 	
 	int delayed_outputs[4:0];
+	
+	int message_counter [4:0];
 	
 	/* Temporaray variables */
 	buffer input_buff;
@@ -303,8 +305,8 @@ class router_test;
 		input_buff = get_input_buffer(inputPort);
 		assert( input_buff.dir == inputPort );
 		if( input_buff.isEmpty() ) begin
-			$display("INPUT BUFFER was empty for %s %d. Returning",
-				input_buff.name, input_buff.index);
+			//$display("INPUT BUFFER was empty for %s %d. Returning",
+			//	input_buff.name, input_buff.index);
 			return;
 		end		
 		
@@ -315,39 +317,40 @@ class router_test;
 
 		/* Begin error checking and full check */
 		if( output_buff.dir == inputPort ) begin
-			$display("OUTPUT BUFFER is the same as INPUT PORT -- %s. Returning",
-				output_buff.name);
+			//$display("OUTPUT BUFFER is the same as INPUT PORT -- %s. Returning",
+			//	output_buff.name);
 			input_buff.pop();
 			return;
 		end
 		if( (input_buff.dir == c.EAST || input_buff.dir == c.WEST) &&
 			header[3:0] != YCOORD ) begin
-			$display("Illegal port for %s (Attempt to send to %s)",
-				input_buff.name, output_buff.name);
+			//$display("Illegal port for %s (Attempt to send to %s)",
+			//	input_buff.name, output_buff.name);
 			input_buff.pop();
 			return;
 		end
 		if( output_buff.isFull() ) begin
-			$display("OUTPUT BUFFER is full -- %s. Returning",
-					output_buff.name);
+			//$display("OUTPUT BUFFER is full -- %s. Returning",
+			//		output_buff.name);
 			return;
 		end
 
 
 		/*Check arbiter */
 		is_turn = arbiter.is_turn(input_buff.dir, output_buff.dir);
-		$display("Checking: %s. Sending to: %s 	IP: %d	OP: %d",
-			input_buff.name, output_buff.name, input_buff.dir, 
-			output_buff.dir);
+		//$display("Checking: %s. Sending to: %s 	IP: %d	OP: %d",
+		//	input_buff.name, output_buff.name, input_buff.dir, 
+		//	output_buff.dir);
 		if( !is_turn ) begin
-			$display("Wasnt %s turn for %s. Returning",
-				input_buff.name, output_buff.name);
+			//$display("Wasnt %s turn for %s. Returning",
+			//	input_buff.name, output_buff.name);
 			return;
 		end
 
 
 		/*IF WE REACHED THIS POINT THEN PUT IT INTO OUTPUT BUFF*/
 		output_buff.push( input_buff.pop() );
+		message_counter[ output_buff.dir - 1] = message_counter[ output_buff.dir - 1] + 1;
 
 		/* Check for credits */
 		if( credits[ output_buff.dir - 1] <= 0) begin
@@ -365,8 +368,8 @@ class router_test;
 //->>> UNCOM	//credits[ output_buff.dir - 1] = credits[ output_buff.dir - 1] - 1;
 		/*----------------------------------------------*/
 
-		$display("OUTPUT %s should be %b",
-		output_buff.name, outputs[output_buff.dir - 1]);
+		//$display("OUTPUT %s should be %b",
+		//	output_buff.name, outputs[output_buff.dir - 1]);
 		
 	endfunction;
 	
@@ -376,8 +379,8 @@ class router_test;
 		input_buff = get_input_buffer(inputPort);
 		assert( input_buff.dir == inputPort );
 		if( input_buff.isFull() ) begin
-			$display("INPUT BUFFER is full for %s. Returning",
-				input_buff.name);
+			//$display("INPUT BUFFER is full for %s. Returning",
+			//	input_buff.name);
 			return;
 		end		
 		input_buff.push(header_l);
@@ -385,7 +388,7 @@ class router_test;
 	endfunction
 
 	//golden result
-	function void golden_result(logic [15:0] header_l);
+	function void golden_result();
 		
 		/*Move output to special buffers for Checker*/
         	move_outputs();
@@ -414,29 +417,33 @@ class router_test;
         	advance_inputPort(c.LOCAL);
         	
 		if( inputs[c.NORTH - 1] != -1 && !N_full) begin
-			handle_input(c.NORTH, header_l);
+			handle_input(c.NORTH, inputs[c.NORTH - 1]);
 		end
 		if( inputs[c.SOUTH - 1] != -1 && !S_full) begin
-			handle_input(c.SOUTH, header_l);
+			handle_input(c.SOUTH, inputs[c.SOUTH - 1]);
 		end
 		if( inputs[c.EAST - 1] != -1 && !E_full) begin
-			handle_input(c.EAST, header_l);
+			handle_input(c.EAST, inputs[c.EAST - 1]);
 		end
 		if( inputs[c.WEST - 1] != -1 && !W_full) begin
-			handle_input(c.WEST, header_l);
+			handle_input(c.WEST, inputs[c.WEST - 1]);
 		end
 		if( inputs[c.LOCAL - 1] != -1 && !L_full) begin
-			handle_input(c.LOCAL, header_l);
+			handle_input(c.LOCAL, inputs[c.LOCAL - 1]);
         	end	
         	
+        	/*
         	L_input_buff.print();
-        	//N_input_buff.print();
-        	//E_input_buff.print();
+        	N_input_buff.print();
+        	E_input_buff.print();
+        	S_input_buff.print();
+        	W_input_buff.print();
         	$display("%d",delayed_outputs[0]);
         	$display("%d",delayed_outputs[1]);
         	$display("%d",delayed_outputs[2]);
         	$display("%d",delayed_outputs[3]);
         	$display("%d",delayed_outputs[4]);
+        	*/
         	
 		/* Based on negedge/posedge rst -- this comes
 		 before or after advance_inputPort*/
@@ -585,8 +592,16 @@ class router_transaction;
 	rand int input_port5;
 
 	/* Destination address of packet*/
-	rand logic [3:0] x;
-	rand logic [3:0] y;
+	rand logic [3:0] x1;
+	rand logic [3:0] y1;
+	rand logic [3:0] x2;
+	rand logic [3:0] y2;
+	rand logic [3:0] x3;
+	rand logic [3:0] y3;
+	rand logic [3:0] x4;
+	rand logic [3:0] y4;
+	rand logic [3:0] x5;
+	rand logic [3:0] y5;
     
 	function new(router_env env);
 		this.env = env;
@@ -631,8 +646,16 @@ class router_transaction;
 			(env.use_input5[3] && input_port5 == 4) ||
 			(env.use_input5[4] && input_port5 == 5);
 			}
-	constraint x_val { x == 4'b1000 || x == 4'b0100 || x == 4'b0010 || x == 4'b0001; }
-	constraint y_val { y == 4'b1000 || y == 4'b0100 || y == 4'b0010 || y == 4'b0001; }
+	constraint x1_val { x1 == 4'b1000 || x1 == 4'b0100 || x1 == 4'b0010 || x1 == 4'b0001; }
+	constraint y1_val { y1 == 4'b1000 || y1 == 4'b0100 || y1 == 4'b0010 || y1 == 4'b0001; }
+	constraint x2_val { x2 == 4'b1000 || x2 == 4'b0100 || x2 == 4'b0010 || x2 == 4'b0001; }
+	constraint y2_val { y2 == 4'b1000 || y2 == 4'b0100 || y2 == 4'b0010 || y2 == 4'b0001; }
+	constraint x3_val { x3 == 4'b1000 || x3 == 4'b0100 || x3 == 4'b0010 || x3 == 4'b0001; }
+	constraint y3_val { y3 == 4'b1000 || y3 == 4'b0100 || y3 == 4'b0010 || y3 == 4'b0001; }
+	constraint x4_val { x4 == 4'b1000 || x4 == 4'b0100 || x4 == 4'b0010 || x4 == 4'b0001; }
+	constraint y4_val { y4 == 4'b1000 || y4 == 4'b0100 || y4 == 4'b0010 || y4 == 4'b0001; }
+	constraint x5_val { x5 == 4'b1000 || x5 == 4'b0100 || x5 == 4'b0010 || x5 == 4'b0001; }
+	constraint y5_val { y5 == 4'b1000 || y5 == 4'b0100 || y5 == 4'b0010 || y5 == 4'b0001; }
 
 
 endclass
@@ -652,7 +675,11 @@ program tb (	ifc_a n_ds_a, ifc_a n_ds_b,
     int cycle; // For DVE
     
     /*Temp variables*/
-    logic [15:0] header;
+    logic [15:0] header1;
+    logic [15:0] header2;
+    logic [15:0] header3;
+    logic [15:0] header4;
+    logic [15:0] header5;
     int received;
     
     Constants c;
@@ -669,7 +696,7 @@ program tb (	ifc_a n_ds_a, ifc_a n_ds_b,
         
         	@(ctrl_ds.cb_s);
 
-        	test.golden_result(0);
+        	test.golden_result();
 	
 	endtask
 	
@@ -726,13 +753,16 @@ program tb (	ifc_a n_ds_a, ifc_a n_ds_b,
 	l_ds_b.cb_s.enable 	<= 0;
 	l_ds_b.cb_s.data	<= 0;        
         
-        header = { 8'b00000000 , packet.x, packet.y };
+        header1 = { 8'b00000000 , packet.x1, packet.y1 };
+        header2 = { 8'b00000000 , packet.x2, packet.y2 };
+        header3 = { 8'b00000000 , packet.x3, packet.y3 };
+        header4 = { 8'b00000000 , packet.x4, packet.y4 };
+        header5 = { 8'b00000000 , packet.x5, packet.y5 };
+        
         
         $display("\n------------------------------------");
-	$display("After randomize - X:%d, Y:%d Rst:%d Reset_Density:%f",
-		packet.x,packet.y,packet.rst,env.reset_density);
-
-	$display("Header: %b", header);
+	$display("After randomize - Rst:%d Reset_Density:%f",
+			packet.rst,env.reset_density);
 	
 	
 	test.rst 	<= (packet.rst < env.reset_density);
@@ -741,29 +771,34 @@ program tb (	ifc_a n_ds_a, ifc_a n_ds_b,
         //if( packet.rst > 7) begin
         	if( env.input1_active ) begin
         		$display("Activating port 1");
-        		activate_message(packet.input_port1,header);
+        		$display("Header: %b (%d)", header1,header1);
+        		activate_message(packet.input_port1,header1);
         	end 
         //end
         if( env.input2_active ) begin
         	$display("Activating port 2");
-	        activate_message(packet.input_port2,header);
+        	$display("Header: %b (%d)", header2,header2);
+	        activate_message(packet.input_port2,header2);
         end 
         if( env.input3_active ) begin
         	$display("Activating port 3");
-	        activate_message(packet.input_port3,header);
+        	$display("Header: %b (%d)", header3,header3);
+	        activate_message(packet.input_port3,header3);
         end 
         if( env.input4_active ) begin
         	$display("Activating port 4");
-	        activate_message(packet.input_port4,header);
+        	$display("Header: %b (%d)", header4,header4);
+	        activate_message(packet.input_port4,header4);
         end 
         if( env.input5_active ) begin
         	$display("Activating port 5");
-	        activate_message(packet.input_port5,header);
+        	$display("Header: %b (%d)", header5,header5);
+	        activate_message(packet.input_port5,header5);
         end 
         
         @(ctrl_ds.cb_s);
         
-        test.golden_result(header);
+        test.golden_result();
         
 	$display("------------------------------------------");
 	$display("CHECKING");
@@ -817,7 +852,11 @@ program tb (	ifc_a n_ds_a, ifc_a n_ds_b,
         repeat (env.max_transactions) begin
             do_cycle();
         end
-        
+        $display("Messages Sent To: %d %d %d %d %d",
+        		test.message_counter[0],test.message_counter[1],
+        		test.message_counter[2],test.message_counter[3],
+        		test.message_counter[4]
+        	);
         $display("\n\n----%d cycles completed succesfully ----\n\n", env.cycle);
     end
 endprogram

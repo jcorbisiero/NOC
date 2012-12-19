@@ -35,7 +35,7 @@ DW_fifo_s1_sf#(.width(16), .depth(5), .rst_mode(1))  buffer(
 
 always_comb begin
 
-$display("----- Input Port -------");
+	//$display("----- Input Port -------");
 
 	if (rst) begin
 		rst_n = 0;
@@ -45,32 +45,32 @@ $display("----- Input Port -------");
 
 
 	if (write_en == 1 && !full) begin
-		$display("Pushing -- Data_i:%d Data_out:%d", data_i, data_o);
+		//$display("Pushing -- Data_i:%d Data_out:%d", data_i, data_o);
 		push_n = 0;
 	end else begin
-		$display("Not Pushing -- Data_i:%d Write_en: %d Full:%d Data_out:%d",
-			data_i, write_en, full,data_o);
+		//$display("Not Pushing -- Data_i:%d Write_en: %d Full:%d Data_out:%d",
+		//	data_i, write_en, full,data_o);
 		push_n = 1;
 	end
 
 
 	if (shift) begin
 		assert(!empty);
-		$display("Popping in input -- Pop:%d, Empty:%d, Full:%d Shift:%d",
-			pop_n,empty,full,shift);
+		//$display("Popping in input -- Pop:%d, Empty:%d, Full:%d Shift:%d",
+		//	pop_n,empty,full,shift);
 		pop_n = 0;
 	end else begin
 		pop_n = 1;
 	end
 
-	$display("Input Empty: %d  Read_valid_o: %d", empty, read_valid_o);
+	//$display("Input Empty: %d  Read_valid_o: %d", empty, read_valid_o);
 
 	if (!empty) begin
-		$display("I AM NOT EMPTY");
+		//$display("I AM NOT EMPTY");
 		read_valid_o = 1;
 	end else begin
 		read_valid_o = 0;
-		$display("I AM EMPTY");
+		//$display("I AM EMPTY");
 	end
 
 	//assert(!error);

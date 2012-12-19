@@ -18,7 +18,7 @@ module crossbarSwitch(
 
 always_comb begin
 
-$display("----- Switch -------");
+	//$display("----- Switch -------");
 
 	case(N_port_select)
 		3'b000: N_data_o = 16'bx;
@@ -37,9 +37,6 @@ $display("----- Switch -------");
 		3'b100: S_data_o = L_data_i;
 		default: S_data_o = 16'bx;		
 	endcase
-	
-	$display("S_data_o is %d. S_Port_select: %d",
-		S_data_o, S_port_select);
 
 	case(E_port_select) 
 		3'b000: E_data_o = N_data_i;
@@ -68,7 +65,6 @@ $display("----- Switch -------");
 		default: L_data_o = 16'bx;
 	endcase
 	
-	$display("IN L PORT SELECT - %d %d",N_data_i, L_data_o );
 end
 
 endmodule
