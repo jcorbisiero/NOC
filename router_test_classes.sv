@@ -320,6 +320,7 @@ class router_test;
 			//$display("OUTPUT BUFFER is the same as INPUT PORT -- %s. Returning",
 			//	output_buff.name);
 			input_buff.pop();
+			inc_neighbors_credits(input_buff.dir);
 			return;
 		end
 		if( (input_buff.dir == c.EAST || input_buff.dir == c.WEST) &&
@@ -327,6 +328,7 @@ class router_test;
 			//$display("Illegal port for %s (Attempt to send to %s)",
 			//	input_buff.name, output_buff.name);
 			input_buff.pop();
+			inc_neighbors_credits(input_buff.dir);
 			return;
 		end
 		if( output_buff.isFull() ) begin
@@ -352,6 +354,8 @@ class router_test;
 		output_buff.push( input_buff.pop() );
 		message_counter[ output_buff.dir - 1] = message_counter[ output_buff.dir - 1] + 1;
 
+		inc_neighbors_credits( input_buff.dir );
+
 		/* Check for credits */
 		if( credits[ output_buff.dir - 1] <= 0) begin
 			$display("CREDITS FOR %s were %d. Returning",
@@ -360,16 +364,19 @@ class router_test;
 		end
 
 		/*WE MADE IT. SEND TO OUTPUT*/
-		outputs[output_buff.dir - 1] = output_buff.pop();
+		if( credits[output_buff.dir - 1] != 0) begin
+			if( credits[ output_buff.dir] < 0 ) begin
+				$display("CREDITS < 0 for %s", output_buff.name);
+				$exit();
+			end
+			
+			outputs[output_buff.dir - 1] = output_buff.pop();
 
-		/*----------------------------------------------*/
-		/* THIS IS COMMENTED OUT -- UNCOMMENT */
-		/* DONT FORGET ABOUT ME */
-//->>> UNCOM	//credits[ output_buff.dir - 1] = credits[ output_buff.dir - 1] - 1;
-		/*----------------------------------------------*/
+			credits[ output_buff.dir - 1] = credits[ output_buff.dir - 1] - 1;
 
-		//$display("OUTPUT %s should be %b",
-		//	output_buff.name, outputs[output_buff.dir - 1]);
+			//$display("OUTPUT %s should be %b",
+			//	output_buff.name, outputs[output_buff.dir - 1]);
+		end
 		
 	endfunction;
 	
@@ -453,6 +460,33 @@ class router_test;
 		/* IS THIS CORRECT? */
               	arbiter.advance();
         
+    endfunction
+    
+    function void inc_neighbors_credits( int input_port );
+    	
+    	/* Increment credits of N neighbor, S port */
+	if( neighbors[0] && input_port == c.NORTH) begin
+		neighbors[0].credits[1]++; 
+		$display("INC Neighbor %d Port%d",0,1);
+	end
+        	
+        /* Increment credits of S neighbor, N port */
+	if( neighbors[1] && input_port == c.SOUTH) begin
+		neighbors[1].credits[0]++; 
+		$display("INC Neighbor %d Port%d",1,0);
+	end
+	
+	/* Increment credits of E neighbor, W port */
+	if( neighbors[2] && input_port == c.EAST) begin
+		neighbors[2].credits[3]++; 
+		$display("INC Neighbor %d Port%d",2,3);
+	end
+	/* Increment credits of W neighbor, E port */
+	if( neighbors[3] && input_port == c.WEST) begin
+		neighbors[3].credits[2]++; 
+		$display("INC Neighbor %d Port%d",3,2);
+	end
+    
     endfunction
     
     function void send_to_neighbors();
