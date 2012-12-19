@@ -6,47 +6,47 @@ module top();
 
 	initial $vcdpluson;
 
-	ifc_a ifc_0_0_to (clk);
-	ifc_a ifc_0_1_to (clk);
-	ifc_a ifc_0_2_to (clk);
-	ifc_a ifc_0_3_to (clk);
+	ifc ifc_0_0_to (clk);
+	ifc ifc_0_1_to (clk);
+	ifc ifc_0_2_to (clk);
+	ifc ifc_0_3_to (clk);
 
-	ifc_a ifc_0_0_from (clk);
-	ifc_a ifc_0_1_from (clk);
-	ifc_a ifc_0_2_from (clk);
-	ifc_a ifc_0_3_from (clk);
+	ifc ifc_0_0_from (clk);
+	ifc ifc_0_1_from (clk);
+	ifc ifc_0_2_from (clk);
+	ifc ifc_0_3_from (clk);
 
-	ifc_a ifc_1_0_to (clk);
-	ifc_a ifc_1_1_to (clk);
-	ifc_a ifc_1_2_to (clk);
-	ifc_a ifc_1_3_to (clk);
+	ifc ifc_1_0_to (clk);
+	ifc ifc_1_1_to (clk);
+	ifc ifc_1_2_to (clk);
+	ifc ifc_1_3_to (clk);
 
-	ifc_a ifc_1_0_from (clk);
-	ifc_a ifc_1_1_from (clk);
-	ifc_a ifc_1_2_from (clk);
-	ifc_a ifc_1_3_from (clk);
+	ifc ifc_1_0_from (clk);
+	ifc ifc_1_1_from (clk);
+	ifc ifc_1_2_from (clk);
+	ifc ifc_1_3_from (clk);
 
-	ifc_a ifc_2_0_to (clk);
-	ifc_a ifc_2_1_to (clk);
-	ifc_a ifc_2_2_to (clk);
-	ifc_a ifc_2_3_to (clk);
+	ifc ifc_2_0_to (clk);
+	ifc ifc_2_1_to (clk);
+	ifc ifc_2_2_to (clk);
+	ifc ifc_2_3_to (clk);
 
-	ifc_a ifc_2_0_from (clk);
-	ifc_a ifc_2_1_from (clk);
-	ifc_a ifc_2_2_from (clk);
-	ifc_a ifc_2_3_from (clk);
+	ifc ifc_2_0_from (clk);
+	ifc ifc_2_1_from (clk);
+	ifc ifc_2_2_from (clk);
+	ifc ifc_2_3_from (clk);
 
-	ifc_a ifc_3_0_to (clk);
-	ifc_a ifc_3_1_to (clk);
-	ifc_a ifc_3_2_to (clk);
-	ifc_a ifc_3_3_to (clk);
+	ifc ifc_3_0_to (clk);
+	ifc ifc_3_1_to (clk);
+	ifc ifc_3_2_to (clk);
+	ifc ifc_3_3_to (clk);
 
-	ifc_a ifc_3_0_from (clk);
-	ifc_a ifc_3_1_from (clk);
-	ifc_a ifc_3_2_from (clk);
-	ifc_a ifc_3_3_from (clk);
+	ifc ifc_3_0_from (clk);
+	ifc ifc_3_1_from (clk);
+	ifc ifc_3_2_from (clk);
+	ifc ifc_3_3_from (clk);
 
-	ifc_a CTRL(clk);
+	ifc CTRL(clk);
 
 //	tb_noc bench ();
 

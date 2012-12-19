@@ -1,5 +1,5 @@
 
-INTERFACE=ifc_a.sv
+INTERFACE=ifc_noc.sv
 BENCH_ROUTER=bench_router.sv
 BENCH_NOC=bench_noc.sv
 NOC=noc.sv noc_router.sv top_noc.sv $(INTERFACE) $(EDGE_ROUTERS) $(MODULES) #$(BENCH_NOC)

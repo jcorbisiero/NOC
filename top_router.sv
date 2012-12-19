@@ -6,18 +6,18 @@ module top();
 
 	initial $vcdpluson;
 
-	ifc_a North_a(clk);
-	ifc_a North_b(clk);
-	ifc_a South_a(clk);
-	ifc_a South_b(clk);
-	ifc_a East_a(clk);
-	ifc_a East_b(clk);
-	ifc_a West_a(clk);
-	ifc_a West_b(clk);
-	ifc_a Local_a(clk);
-	ifc_a Local_b(clk);
+	ifc North_a(clk);
+	ifc North_b(clk);
+	ifc South_a(clk);
+	ifc South_b(clk);
+	ifc East_a(clk);
+	ifc East_b(clk);
+	ifc West_a(clk);
+	ifc West_b(clk);
+	ifc Local_a(clk);
+	ifc Local_b(clk);
 
-	ifc_a ctrl(clk);
+	ifc ctrl(clk);
 
 //	tb bench (IFCN.bench, IFCS.bench, IFCE.bench, 
 //		IFCW.bench, IFCL.bench, CTRL.bench);

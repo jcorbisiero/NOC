@@ -660,12 +660,12 @@ class router_transaction;
 
 endclass
 
-program tb_router (	ifc_a n_ds_a, ifc_a n_ds_b,
-			ifc_a s_ds_a, ifc_a s_ds_b,
-			ifc_a e_ds_a, ifc_a e_ds_b,
-			ifc_a w_ds_a, ifc_a w_ds_b,
-			ifc_a l_ds_a, ifc_a l_ds_b,
-			ifc_a ctrl_ds
+program tb_router (	ifc n_ds_a, ifc n_ds_b,
+			ifc s_ds_a, ifc s_ds_b,
+			ifc e_ds_a, ifc e_ds_b,
+			ifc w_ds_a, ifc w_ds_b,
+			ifc l_ds_a, ifc l_ds_b,
+			ifc ctrl_ds
 	);
 		
     router_test test;

@@ -1,17 +1,17 @@
 module router#(	parameter XCOORD = 1111,
 		parameter YCOORD = 1111 )
 (
-	ifc_a N_ifc_a,
-	ifc_a N_ifc_b,
-	ifc_a S_ifc_a,
-	ifc_a S_ifc_b,
-	ifc_a E_ifc_a,
-	ifc_a E_ifc_b,
-	ifc_a W_ifc_a,
-	ifc_a W_ifc_b,
-	ifc_a L_ifc_a,
-	ifc_a L_ifc_b,
-	ifc_a.control control
+	ifc N_ifc_a,
+	ifc N_ifc_b,
+	ifc S_ifc_a,
+	ifc S_ifc_b,
+	ifc E_ifc_a,
+	ifc E_ifc_b,
+	ifc W_ifc_a,
+	ifc W_ifc_b,
+	ifc L_ifc_a,
+	ifc L_ifc_b,
+	ifc.control control
 );
 
 //wires

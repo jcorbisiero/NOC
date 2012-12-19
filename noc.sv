@@ -1,110 +1,110 @@
 module noc (
-	ifc_a.control control,
-	ifc_a ifc_0_0_to,
-	ifc_a ifc_0_1_to,
-	ifc_a ifc_0_2_to,
-	ifc_a ifc_0_3_to,
+	ifc.control control,
+	ifc ifc_0_0_to,
+	ifc ifc_0_1_to,
+	ifc ifc_0_2_to,
+	ifc ifc_0_3_to,
 
-	ifc_a ifc_0_0_from,
-	ifc_a ifc_0_1_from,
-	ifc_a ifc_0_2_from,
-	ifc_a ifc_0_3_from,
+	ifc ifc_0_0_from,
+	ifc ifc_0_1_from,
+	ifc ifc_0_2_from,
+	ifc ifc_0_3_from,
 
-	ifc_a ifc_1_0_to,
-	ifc_a ifc_1_1_to,
-	ifc_a ifc_1_2_to,
-	ifc_a ifc_1_3_to,
+	ifc ifc_1_0_to,
+	ifc ifc_1_1_to,
+	ifc ifc_1_2_to,
+	ifc ifc_1_3_to,
 
-	ifc_a ifc_1_0_from,
-	ifc_a ifc_1_1_from,
-	ifc_a ifc_1_2_from,
-	ifc_a ifc_1_3_from,
+	ifc ifc_1_0_from,
+	ifc ifc_1_1_from,
+	ifc ifc_1_2_from,
+	ifc ifc_1_3_from,
 
-	ifc_a ifc_2_0_to,
-	ifc_a ifc_2_1_to,
-	ifc_a ifc_2_2_to,
-	ifc_a ifc_2_3_to,
+	ifc ifc_2_0_to,
+	ifc ifc_2_1_to,
+	ifc ifc_2_2_to,
+	ifc ifc_2_3_to,
 
-	ifc_a ifc_2_0_from,
-	ifc_a ifc_2_1_from,
-	ifc_a ifc_2_2_from,
-	ifc_a ifc_2_3_from,
+	ifc ifc_2_0_from,
+	ifc ifc_2_1_from,
+	ifc ifc_2_2_from,
+	ifc ifc_2_3_from,
 
-	ifc_a ifc_3_0_to,
-	ifc_a ifc_3_1_to,
-	ifc_a ifc_3_2_to,
-	ifc_a ifc_3_3_to,
+	ifc ifc_3_0_to,
+	ifc ifc_3_1_to,
+	ifc ifc_3_2_to,
+	ifc ifc_3_3_to,
 
-	ifc_a ifc_3_0_from,
-	ifc_a ifc_3_1_from,
-	ifc_a ifc_3_2_from,
-	ifc_a ifc_3_3_from );
+	ifc ifc_3_0_from,
+	ifc ifc_3_1_from,
+	ifc ifc_3_2_from,
+	ifc ifc_3_3_from );
 
 //First row to second row
-ifc_a ifc_00_01_d(control.clk);
-ifc_a ifc_10_11_d(control.clk);
-ifc_a ifc_20_21_d(control.clk);
-ifc_a ifc_30_31_d(control.clk);
+ifc ifc_00_01_d(control.clk);
+ifc ifc_10_11_d(control.clk);
+ifc ifc_20_21_d(control.clk);
+ifc ifc_30_31_d(control.clk);
 
-ifc_a ifc_00_01_u(control.clk);
-ifc_a ifc_10_11_u(control.clk);
-ifc_a ifc_20_21_u(control.clk);
-ifc_a ifc_30_31_u(control.clk);
+ifc ifc_00_01_u(control.clk);
+ifc ifc_10_11_u(control.clk);
+ifc ifc_20_21_u(control.clk);
+ifc ifc_30_31_u(control.clk);
 
 //Second row to third row
-ifc_a ifc_01_02_d(control.clk);
-ifc_a ifc_11_12_d(control.clk);
-ifc_a ifc_21_22_d(control.clk);
-ifc_a ifc_31_32_d(control.clk);
+ifc ifc_01_02_d(control.clk);
+ifc ifc_11_12_d(control.clk);
+ifc ifc_21_22_d(control.clk);
+ifc ifc_31_32_d(control.clk);
 
-ifc_a ifc_01_02_u(control.clk);
-ifc_a ifc_11_12_u(control.clk);
-ifc_a ifc_21_22_u(control.clk);
-ifc_a ifc_31_32_u(control.clk);
+ifc ifc_01_02_u(control.clk);
+ifc ifc_11_12_u(control.clk);
+ifc ifc_21_22_u(control.clk);
+ifc ifc_31_32_u(control.clk);
 
 //Third row to fourth row
-ifc_a ifc_02_03_d(control.clk);
-ifc_a ifc_12_13_d(control.clk);
-ifc_a ifc_22_23_d(control.clk);
-ifc_a ifc_32_33_d(control.clk);
+ifc ifc_02_03_d(control.clk);
+ifc ifc_12_13_d(control.clk);
+ifc ifc_22_23_d(control.clk);
+ifc ifc_32_33_d(control.clk);
 
-ifc_a ifc_02_03_u(control.clk);
-ifc_a ifc_12_13_u(control.clk);
-ifc_a ifc_22_23_u(control.clk);
-ifc_a ifc_32_33_u(control.clk);
+ifc ifc_02_03_u(control.clk);
+ifc ifc_12_13_u(control.clk);
+ifc ifc_22_23_u(control.clk);
+ifc ifc_32_33_u(control.clk);
 
 //First column to second column
-ifc_a ifc_00_10_r(control.clk);
-ifc_a ifc_01_11_r(control.clk);
-ifc_a ifc_02_12_r(control.clk);
-ifc_a ifc_03_13_r(control.clk);
+ifc ifc_00_10_r(control.clk);
+ifc ifc_01_11_r(control.clk);
+ifc ifc_02_12_r(control.clk);
+ifc ifc_03_13_r(control.clk);
 
-ifc_a ifc_00_10_l(control.clk);
-ifc_a ifc_01_11_l(control.clk);
-ifc_a ifc_02_12_l(control.clk);
-ifc_a ifc_03_13_l(control.clk);
+ifc ifc_00_10_l(control.clk);
+ifc ifc_01_11_l(control.clk);
+ifc ifc_02_12_l(control.clk);
+ifc ifc_03_13_l(control.clk);
 
 //Second column to third column
-ifc_a ifc_10_20_l(control.clk);
-ifc_a ifc_11_21_l(control.clk);
-ifc_a ifc_12_22_l(control.clk);
-ifc_a ifc_13_23_l(control.clk);
+ifc ifc_10_20_l(control.clk);
+ifc ifc_11_21_l(control.clk);
+ifc ifc_12_22_l(control.clk);
+ifc ifc_13_23_l(control.clk);
 
-ifc_a ifc_10_20_r(control.clk);
-ifc_a ifc_11_21_r(control.clk);
-ifc_a ifc_12_22_r(control.clk);
-ifc_a ifc_13_23_r(control.clk);
+ifc ifc_10_20_r(control.clk);
+ifc ifc_11_21_r(control.clk);
+ifc ifc_12_22_r(control.clk);
+ifc ifc_13_23_r(control.clk);
 
 //Third column to fourth column
-ifc_a ifc_20_30_r(control.clk);
-ifc_a ifc_21_31_r(control.clk);
-ifc_a ifc_22_32_r(control.clk);
-ifc_a ifc_23_33_r(control.clk);
+ifc ifc_20_30_r(control.clk);
+ifc ifc_21_31_r(control.clk);
+ifc ifc_22_32_r(control.clk);
+ifc ifc_23_33_r(control.clk);
 
-ifc_a ifc_20_30_l(control.clk);
-ifc_a ifc_21_31_l(control.clk);
-ifc_a ifc_22_32_l(control.clk);
-ifc_a ifc_23_33_l(control.clk);
+ifc ifc_20_30_l(control.clk);
+ifc ifc_21_31_l(control.clk);
+ifc ifc_22_32_l(control.clk);
+ifc ifc_23_33_l(control.clk);
 
 //row 0
 nw_router #(.XCOORD(0), .YCOORD(0)) r0_0(
