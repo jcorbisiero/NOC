@@ -6,16 +6,16 @@ module top();
 
 	initial $vcdpluson;
 
-	ifc North_a(clk);
-	ifc North_b(clk);
-	ifc South_a(clk);
-	ifc South_b(clk);
-	ifc East_a(clk);
-	ifc East_b(clk);
-	ifc West_a(clk);
-	ifc West_b(clk);
-	ifc Local_a(clk);
-	ifc Local_b(clk);
+	ifc North_to(clk);
+	ifc North_from(clk);
+	ifc South_to(clk);
+	ifc South_from(clk);
+	ifc East_to(clk);
+	ifc East_from(clk);
+	ifc West_to(clk);
+	ifc West_from(clk);
+	ifc Local_to(clk);
+	ifc Local_from(clk);
 
 	ifc ctrl(clk);
 
@@ -23,19 +23,19 @@ module top();
 //		IFCW.bench, IFCL.bench, CTRL.bench);
 
 
-	tb_router bench (North_a.bench, North_b.bench,
-		South_a.bench, South_b.bench,
-		East_a.bench, East_b.bench,
-		West_a.bench, West_b.bench,
-		Local_a.bench, Local_b.bench,
+	tb_router bench (North_to.bench, North_from.bench,
+		South_to.bench, South_from.bench,
+		East_to.bench, East_from.bench,
+		West_to.bench, West_from.bench,
+		Local_to.bench, Local_from.bench,
 		ctrl.bench );
 
 	router#(.XCOORD(2), .YCOORD(2)) dut
-	(	North_a.send, North_b.receive,
-		South_a.send, South_b.receive,
-		East_a.send, East_b.receive,
-		West_a.send, West_b.receive,
-		Local_a.send, Local_b.receive,
+	(	North_to.send, North_from.receive,
+		South_to.send, South_from.receive,
+		East_to.send, East_from.receive,
+		West_to.send, West_from.receive,
+		Local_to.send, Local_from.receive,
 		ctrl.control
 	);
 

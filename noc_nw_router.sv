@@ -1,12 +1,12 @@
 module nw_router#(parameter XCOORD = 1111,
 		parameter YCOORD = 1111 )
 (
-	ifc S_ifc_a,
-	ifc S_ifc_b,
-	ifc E_ifc_a,
-	ifc E_ifc_b,
-	ifc L_ifc_a,
-	ifc L_ifc_b,
+	ifc S_ifc_o,
+	ifc S_ifc_i,
+	ifc E_ifc_o,
+	ifc E_ifc_i,
+	ifc L_ifc_o,
+	ifc L_ifc_i,
 	ifc.control control
 );
 
@@ -48,8 +48,8 @@ wire [2:0] L_port_select;
 //Ports
 	inputPort sInPort(.clk(control.clk),
 				.rst(control.rst), 
-				.data_i(S_ifc_b.data), 
-				.write_en(S_ifc_b.enable),
+				.data_i(S_ifc_i.data), 
+				.write_en(S_ifc_i.enable),
 				.shift(S_pop),
 				.data_o(S_rcvd_data),
 				.read_valid_o(S_rcvd_valid));
@@ -58,16 +58,16 @@ wire [2:0] L_port_select;
 				.rst(control.rst),
 				.data_i(S_send_data),
 				.port_en(S_send_enable),
-				.inc_credit_i(S_ifc_a.credit),
-				.data_o(S_ifc_a.data),
-				.send_data(S_ifc_a.enable),
+				.inc_credit_i(S_ifc_o.credit),
+				.data_o(S_ifc_o.data),
+				.send_data(S_ifc_o.enable),
 				.full(S_full));
 
 
 	inputPort eInPort(.clk(control.clk),
 				.rst(control.rst), 
-				.data_i(E_ifc_b.data), 
-				.write_en(E_ifc_b.enable),
+				.data_i(E_ifc_i.data), 
+				.write_en(E_ifc_i.enable),
 				.shift(E_pop),
 				.data_o(E_rcvd_data),
 				.read_valid_o(E_rcvd_valid));
@@ -76,16 +76,16 @@ wire [2:0] L_port_select;
 				.rst(control.rst),
 				.data_i(E_send_data),
 				.port_en(E_send_enable),
-				.inc_credit_i(E_ifc_a.credit),
-				.data_o(E_ifc_a.data),
-				.send_data(E_ifc_a.enable),
+				.inc_credit_i(E_ifc_o.credit),
+				.data_o(E_ifc_o.data),
+				.send_data(E_ifc_o.enable),
 				.full(E_full));
 
 
 inputPort lInPort(.clk(control.clk),
 			.rst(control.rst), 
-			.data_i(L_ifc_b.data), 
-			.write_en(L_ifc_b.enable),
+			.data_i(L_ifc_i.data), 
+			.write_en(L_ifc_i.enable),
 			.shift(L_pop),
 			.data_o(L_rcvd_data),
 			.read_valid_o(L_rcvd_valid));
@@ -94,9 +94,9 @@ outputPort lOutPort(.clk(control.clk),
 			.rst(control.rst),
 			.data_i(L_send_data),
 			.port_en(L_send_enable),
-			.inc_credit_i(L_ifc_a.credit),
-			.data_o(L_ifc_a.data),
-			.send_data(L_ifc_a.enable),
+			.inc_credit_i(L_ifc_o.credit),
+			.data_o(L_ifc_o.data),
+			.send_data(L_ifc_o.enable),
 			.full(L_full));
 
 
@@ -139,10 +139,10 @@ routeLogic#(.XCOORD(XCOORD), .YCOORD(YCOORD),
 		.W_port_enable(),
 		.L_port_enable(L_send_enable),
 		.N_credit_inc(),
-		.S_credit_inc(S_ifc_a.credit),
-		.E_credit_inc(E_ifc_b.credit),
+		.S_credit_inc(S_ifc_o.credit),
+		.E_credit_inc(E_ifc_i.credit),
 		.W_credit_inc(),
-		.L_credit_inc(L_ifc_a.credit));
+		.L_credit_inc(L_ifc_o.credit));
 
 //Arbiter
 arbiter arb(.clk(control.clk), 
