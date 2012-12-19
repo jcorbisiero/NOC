@@ -48,7 +48,7 @@ module top();
 
 	ifc_a CTRL(clk);
 
-//	tb bench ();
+//	tb_noc bench ();
 
 	noc dut(.control(CTRL.control),
 		.ifc_0_0_to,

@@ -23,7 +23,7 @@ module top();
 //		IFCW.bench, IFCL.bench, CTRL.bench);
 
 
-	tb bench (North_a.bench, North_b.bench,
+	tb_router bench (North_a.bench, North_b.bench,
 		South_a.bench, South_b.bench,
 		East_a.bench, East_b.bench,
 		West_a.bench, West_b.bench,
