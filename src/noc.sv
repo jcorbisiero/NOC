@@ -107,7 +107,7 @@ ifc ifc_22_32_l(control.clk);
 ifc ifc_23_33_l(control.clk);
 
 //row 0
-nw_router #(.XCOORD(1000), .YCOORD(1000)) r0_0(
+nw_router #(.XCOORD(0001), .YCOORD(0001)) r0_0(
 	.control,
 	.S_ifc_o(ifc_00_01_d.send),
 	.S_ifc_i(ifc_00_01_u.receive),
@@ -116,7 +116,7 @@ nw_router #(.XCOORD(1000), .YCOORD(1000)) r0_0(
 	.L_ifc_o(ifc_0_0_to.send),
 	.L_ifc_i(ifc_0_0_from.receive));
 
-nedge_router #(.XCOORD(0100), .YCOORD(1000)) r1_0(
+nedge_router #(.XCOORD(0010), .YCOORD(0001)) r1_0(
 	.control,
 	.S_ifc_o(ifc_10_11_d.send),
 	.S_ifc_i(ifc_10_11_u.receive),
@@ -127,7 +127,7 @@ nedge_router #(.XCOORD(0100), .YCOORD(1000)) r1_0(
 	.L_ifc_o(ifc_1_0_to.send),
 	.L_ifc_i(ifc_1_0_from.receive));
 
-nedge_router #(.XCOORD(0010), .YCOORD(1000)) r2_0(
+nedge_router #(.XCOORD(0100), .YCOORD(0001)) r2_0(
 	.control,
 	.S_ifc_o(ifc_20_21_d.send),
 	.S_ifc_i(ifc_20_21_u.receive),
@@ -138,7 +138,7 @@ nedge_router #(.XCOORD(0010), .YCOORD(1000)) r2_0(
 	.L_ifc_o(ifc_2_0_to.send),
 	.L_ifc_i(ifc_2_0_from.receive));
 
-ne_router #(.XCOORD(0001), .YCOORD(1000)) r3_0(
+ne_router #(.XCOORD(1000), .YCOORD(0001)) r3_0(
 	.control,
 	.S_ifc_o(ifc_30_31_d.send),
 	.S_ifc_i(ifc_30_31_u.receive),
@@ -149,7 +149,7 @@ ne_router #(.XCOORD(0001), .YCOORD(1000)) r3_0(
 
 
 //row 1
-wedge_router #(.XCOORD(1000), .YCOORD(0100)) r0_1(
+wedge_router #(.XCOORD(0001), .YCOORD(0010)) r0_1(
 	.control,
 	.N_ifc_o(ifc_00_01_u.send),
 	.N_ifc_i(ifc_00_01_d.receive),
@@ -160,7 +160,7 @@ wedge_router #(.XCOORD(1000), .YCOORD(0100)) r0_1(
 	.L_ifc_o(ifc_0_1_to.send),
 	.L_ifc_i(ifc_0_1_from.receive));
 
-router #(.XCOORD(0100), .YCOORD(0100)) r1_1(
+router #(.XCOORD(0010), .YCOORD(0010)) r1_1(
 	.control,
 	.N_ifc_o(ifc_10_11_u.send),
 	.N_ifc_i(ifc_10_11_d.receive),
@@ -173,7 +173,7 @@ router #(.XCOORD(0100), .YCOORD(0100)) r1_1(
 	.L_ifc_o(ifc_1_1_to.send),
 	.L_ifc_i(ifc_1_1_from.receive));
 
-router #(.XCOORD(0010), .YCOORD(0100)) r2_1(
+router #(.XCOORD(0100), .YCOORD(0010)) r2_1(
 	.control,
 	.N_ifc_o(ifc_20_21_u.send),
 	.N_ifc_i(ifc_20_21_d.receive),
@@ -186,7 +186,7 @@ router #(.XCOORD(0010), .YCOORD(0100)) r2_1(
 	.L_ifc_o(ifc_2_1_to.send),
 	.L_ifc_i(ifc_2_1_from.receive));
 
-eedge_router #(.XCOORD(0001), .YCOORD(0100)) r3_1(
+eedge_router #(.XCOORD(1000), .YCOORD(0010)) r3_1(
 	.control,
 	.N_ifc_o(ifc_30_31_u.send),
 	.N_ifc_i(ifc_30_31_d.receive),
@@ -198,7 +198,7 @@ eedge_router #(.XCOORD(0001), .YCOORD(0100)) r3_1(
 	.L_ifc_i(ifc_3_1_from.receive));
 
 //row 2
-wedge_router #(.XCOORD(1000), .YCOORD(0010)) r0_2(
+wedge_router #(.XCOORD(0001), .YCOORD(0100)) r0_2(
 	.control,
 	.N_ifc_o(ifc_01_02_u.send),
 	.N_ifc_i(ifc_01_02_d.receive),
@@ -209,7 +209,7 @@ wedge_router #(.XCOORD(1000), .YCOORD(0010)) r0_2(
 	.L_ifc_o(ifc_0_2_to.send),
 	.L_ifc_i(ifc_0_2_from.receive));
 
-router #(.XCOORD(0100), .YCOORD(0010)) r1_2(
+router #(.XCOORD(0010), .YCOORD(0100)) r1_2(
 	.control,
 	.N_ifc_o(ifc_11_12_u.send),
 	.N_ifc_i(ifc_11_12_d.receive),
@@ -222,7 +222,7 @@ router #(.XCOORD(0100), .YCOORD(0010)) r1_2(
 	.L_ifc_o(ifc_1_2_to.send),
 	.L_ifc_i(ifc_1_2_from.receive));
 
-router #(.XCOORD(0010), .YCOORD(0010)) r2_2(
+router #(.XCOORD(0100), .YCOORD(0100)) r2_2(
 	.control,
 	.N_ifc_o(ifc_21_22_u.send),
 	.N_ifc_i(ifc_21_22_d.receive),
@@ -235,7 +235,7 @@ router #(.XCOORD(0010), .YCOORD(0010)) r2_2(
 	.L_ifc_o(ifc_2_2_to.send),
 	.L_ifc_i(ifc_2_2_from.receive));
 
-eedge_router #(.XCOORD(0001), .YCOORD(0010)) r3_2(
+eedge_router #(.XCOORD(1000), .YCOORD(0100)) r3_2(
 	.control,
 	.N_ifc_o(ifc_31_32_u.send),
 	.N_ifc_i(ifc_31_32_d.receive),
@@ -248,7 +248,7 @@ eedge_router #(.XCOORD(0001), .YCOORD(0010)) r3_2(
 
 //row 3
 
-sw_router #(.XCOORD(1000), .YCOORD(0001)) r0_3(
+sw_router #(.XCOORD(0001), .YCOORD(1000)) r0_3(
 	.control,
 	.N_ifc_o(ifc_02_03_u.send),
 	.N_ifc_i(ifc_02_03_d.receive),
@@ -257,7 +257,7 @@ sw_router #(.XCOORD(1000), .YCOORD(0001)) r0_3(
 	.L_ifc_o(ifc_0_3_to.send),
 	.L_ifc_i(ifc_0_3_from.receive));
 
-sedge_router #(.XCOORD(0100), .YCOORD(0001)) r1_3(
+sedge_router #(.XCOORD(0010), .YCOORD(1000)) r1_3(
 	.control,
 	.N_ifc_o(ifc_12_13_u.send),
 	.N_ifc_i(ifc_12_13_d.receive),
@@ -268,7 +268,7 @@ sedge_router #(.XCOORD(0100), .YCOORD(0001)) r1_3(
 	.L_ifc_o(ifc_1_3_to.send),
 	.L_ifc_i(ifc_1_3_from.receive));
 
-sedge_router #(.XCOORD(0010), .YCOORD(0001)) r2_3(
+sedge_router #(.XCOORD(0100), .YCOORD(1000)) r2_3(
 	.control,
 	.N_ifc_o(ifc_22_23_u.send),
 	.N_ifc_i(ifc_22_23_d.receive),
@@ -279,7 +279,7 @@ sedge_router #(.XCOORD(0010), .YCOORD(0001)) r2_3(
 	.L_ifc_o(ifc_2_3_to.send),
 	.L_ifc_i(ifc_2_3_from.receive));
 
-se_router #(.XCOORD(0001), .YCOORD(0001)) r3_3(
+se_router #(.XCOORD(1000), .YCOORD(0001)) r3_3(
 	.control,
 	.N_ifc_o(ifc_32_33_u.send),
 	.N_ifc_i(ifc_32_33_d.receive),
