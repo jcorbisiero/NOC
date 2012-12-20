@@ -411,15 +411,13 @@ class router_test;
 		input_buff.push(header_l);
 	
 	endfunction
+	
 
 	//golden result
 	function void golden_result();
 		
 		/*Move output to special buffers for Checker*/
         	move_outputs();
-        	
-        	/*Pass Messages on to Neighbors*/
-		send_to_neighbors();
 		
 		if (rst) begin
 			reset();

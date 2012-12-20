@@ -43,7 +43,7 @@ class noc_checker;	//checker class
 				$display("Error in cycle %d AT X: %d  Y:%d", env.cycle, x, y);
 				$display("DUT data: %d", dut_data);
 				$display("Golden data: %d", golden_data);
-				//$exit();
+				$exit();
 			end
 		end
 	endfunction
@@ -116,6 +116,16 @@ class noc_test;
 		
 	endfunction
 	
+	function send_to_all_neighbors();
+	
+		for(int i = 0; i < 4; i++) begin
+			for(int j = 0; j < 4; j++) begin
+				test[i][j].send_to_neighbors();
+			end
+		end
+	
+	endfunction
+	
 	
 	function void golden_result();
 	
@@ -124,6 +134,10 @@ class noc_test;
 			$display("Resetting NOC golden model");
 			return;
 		end
+		
+		/*Pre golden_result*/
+		/*Send messages to  to all neighbors*/
+		send_to_all_neighbors();
 				
 		for(int i = 0; i < 4; i++) begin
 			for(int j = 0; j < 4; j++) begin
