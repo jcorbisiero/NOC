@@ -391,6 +391,8 @@ class router_test;
 
 			$display("OUTPUT %s should be %b (dir:%d)",
 				output_buff.name, outputs[output_buff.dir - 1], output_buff.dir);
+			
+			$display("Arbiter: %b %b %b %b %b", arbiter.turns[0], arbiter.turns[1], arbiter.turns[2], arbiter.turns[3], arbiter.turns[4]);
 		end
 		
 	endfunction;
@@ -413,11 +415,11 @@ class router_test;
 	//golden result
 	function void golden_result();
 		
-		/*Pass Messages on to Neighbors*/
-		send_to_neighbors();
-		
 		/*Move output to special buffers for Checker*/
         	move_outputs();
+        	
+        	/*Pass Messages on to Neighbors*/
+		send_to_neighbors();
 		
 		if (rst) begin
 			reset();
@@ -511,8 +513,9 @@ class router_test;
     	/* Send N message to S port of neighbor*/
     	if( neighbors[0]) begin
     		neighbors[0].inputs[1] = -1;
-    		if(outputs[0] > 0) begin 
-    			neighbors[0].handle_input(c.SOUTH, outputs[0]);
+    		if(delayed_outputs[0] > 0) begin
+    			//neighbors[0].inputs[1] = delayed_outputs[0];
+    			neighbors[0].handle_input(c.SOUTH, delayed_outputs[0]);
     		end
     		//$display("Sending to neighbor 0");
     	end
@@ -520,8 +523,9 @@ class router_test;
     	/* Send S message to N port of neighbor*/
 	if( neighbors[1]) begin
 		neighbors[1].inputs[0] = -1;
-		if(outputs[1] > 0) begin
-			neighbors[1].handle_input(c.NORTH, outputs[1]);
+		if(delayed_outputs[1] > 0) begin
+			//neighbors[1].inputs[0] = delayed_outputs[1];
+			neighbors[1].handle_input(c.NORTH, delayed_outputs[1]);
 		end
 		//$display("Sending to neighbor 1");
     	end
@@ -529,8 +533,9 @@ class router_test;
     	/* Send E message to W port of neighbor*/
 	if( neighbors[2]) begin
 	    	neighbors[2].inputs[3] = -1;
-	    	if(outputs[2] > 0) begin
-	    		neighbors[2].handle_input(c.WEST, outputs[2]);
+	    	if(delayed_outputs[2] > 0) begin
+	    		//neighbors[2].inputs[3] = delayed_outputs[2];
+	    		neighbors[2].handle_input(c.WEST, delayed_outputs[2]);
 		end
 		//$display("Sending to neighbor 2");
 	end
@@ -538,8 +543,9 @@ class router_test;
 	/* Send W message to E port of neighbor*/
 	if( neighbors[3] ) begin
 		neighbors[3].inputs[2] = -1;
-		if( outputs[3] > 0 ) begin
-			neighbors[3].handle_input(c.EAST, outputs[3]);
+		if( delayed_outputs[3] > 0 ) begin
+			//neighbors[3].inputs[2] = delayed_outputs[3];
+			neighbors[3].handle_input(c.EAST, delayed_outputs[3]);
 		end
 		//$display("Sending to neighbor 3");
 	end

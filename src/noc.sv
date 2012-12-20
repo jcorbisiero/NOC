@@ -225,7 +225,7 @@ router #(.XCOORD('b0010), .YCOORD('b0100)) r1_2(
 	.L_ifc_o(ifc_1_2_to.send),
 	.L_ifc_i(ifc_1_2_from.receive));
 
-router #(.XCOORD('b0100), .YCOORD(0100)) r2_2(
+router #(.XCOORD('b0100), .YCOORD('b0100)) r2_2(
 	.control,
 	.N_ifc_o(ifc_21_22_u.send),
 	.N_ifc_i(ifc_21_22_d.receive),
