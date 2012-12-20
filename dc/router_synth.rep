@@ -6,36 +6,38 @@ Report : timing
         -max_paths 1
 Design : router
 Version: F-2011.09-SP2
-Date   : Wed Dec 19 22:19:52 2012
+Date   : Wed Dec 19 23:51:00 2012
 ****************************************
 
 Operating Conditions: TYPICAL   Library: saed90nm_typ
 Wire Load Model Mode: enclosed
 
-  Startpoint: nOutPort/buffer2/U1/U1/rd_addr_int_reg[0]
+  Startpoint: arb/NTurn_reg[2]
               (rising edge-triggered flip-flop)
-  Endpoint: N_ifc_o.data[15]
+  Endpoint: S_ifc_o.credit
             (output port)
   Path Group: (none)
   Path Type: max
 
   Des/Clust/Port     Wire Load Model       Library
   ------------------------------------------------
-  router             16000                 saed90nm_typ
-  outputPort_4       8000                  saed90nm_typ
+  router             35000                 saed90nm_typ
+  routeLogic_XCOORD1111_YCOORD1111_NORTH1_SOUTH1_EAST1_WEST1
+                     ForQA                 saed90nm_typ
 
   Point                                                   Incr       Path
   --------------------------------------------------------------------------
-  nOutPort/buffer2/U1/U1/rd_addr_int_reg[0]/CLK (DFFX1)
-                                                          0.00       0.00 r
-  nOutPort/buffer2/U1/U1/rd_addr_int_reg[0]/Q (DFFX1)     0.17       0.17 f
-  nOutPort/U108/Q (AND3X1)                                0.16       0.34 f
-  nOutPort/U124/Q (AO22X1)                                0.20       0.53 f
-  nOutPort/U82/QN (NOR2X0)                                0.08       0.61 r
-  nOutPort/U106/QN (NAND2X1)                              0.08       0.70 f
-  nOutPort/data_o[15] (outputPort_4)                      0.00       0.70 f
-  N_ifc_o.data[15] (inout)                                0.00       0.70 f
-  data arrival time                                                  0.70
+  arb/NTurn_reg[2]/CLK (DFFSSRX1)                         0.00       0.00 r
+  arb/NTurn_reg[2]/Q (DFFSSRX1)                           0.16       0.16 f
+  route/N_turn[2] (routeLogic_XCOORD1111_YCOORD1111_NORTH1_SOUTH1_EAST1_WEST1)
+                                                          0.00       0.16 f
+  route/U10/QN (NOR3X0)                                   0.13       0.30 r
+  route/U8/QN (NAND4X0)                                   0.24       0.53 f
+  route/U6/ZN (INVX0)                                     0.20       0.73 r
+  route/S_credit_inc (routeLogic_XCOORD1111_YCOORD1111_NORTH1_SOUTH1_EAST1_WEST1)
+                                                          0.00       0.73 r
+  S_ifc_o.credit (inout)                                  0.00       0.73 r
+  data arrival time                                                  0.73
   --------------------------------------------------------------------------
   (Path is unconstrained)
 
@@ -46,7 +48,7 @@ Wire Load Model Mode: enclosed
 Report : area
 Design : router
 Version: F-2011.09-SP2
-Date   : Wed Dec 19 22:19:52 2012
+Date   : Wed Dec 19 23:51:00 2012
 ****************************************
 
 Library(s) Used:
@@ -54,18 +56,18 @@ Library(s) Used:
     saed90nm_typ (File: /sim/synopsys/SAED_EDK90nm/Digital_Standard_Cell_Library/synopsys/models/saed90nm_typ.db)
 
 Number of ports:                          202
-Number of nets:                           192
-Number of cells:                           26
-Number of combinational cells:             18
+Number of nets:                           332
+Number of cells:                           96
+Number of combinational cells:             85
 Number of sequential cells:                 4
 Number of macros:                           0
 Number of buf/inv:                          1
-Number of references:                       8
+Number of references:                      15
 
-Combinational area:       6699.110322
-Noncombinational area:    7045.631918
-Net Interconnect area:     890.188615  
+Combinational area:       11367.014289
+Noncombinational area:    11678.515060
+Net Interconnect area:    1704.709849  
 
-Total cell area:          13744.742240
-Total area:               14634.930855
+Total cell area:          23045.529349
+Total area:               24750.239198
 1

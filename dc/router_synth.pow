@@ -9,7 +9,7 @@ Report : power
         -analysis_effort low
 Design : router
 Version: F-2011.09-SP2
-Date   : Wed Dec 19 22:19:53 2012
+Date   : Wed Dec 19 23:51:01 2012
 ****************************************
 
 
@@ -23,11 +23,14 @@ Wire Load Model Mode: enclosed
 
 Design        Wire Load Model            Library
 ------------------------------------------------
-router                 16000             saed90nm_typ
+router                 35000             saed90nm_typ
+inputPort_4            8000              saed90nm_typ
 outputPort_4           8000              saed90nm_typ
 routeLogic_XCOORD1111_YCOORD1111_NORTH1_SOUTH1_EAST1_WEST1
                        ForQA             saed90nm_typ
 inputPort_0            8000              saed90nm_typ
+inputPort_1            8000              saed90nm_typ
+inputPort_2            8000              saed90nm_typ
 inputPort_3            8000              saed90nm_typ
 
 
@@ -40,12 +43,12 @@ Power-specific unit information :
     Leakage Power Units = 1pW
 
 
-  Cell Internal Power  =  92.0551 uW   (52%)
-  Net Switching Power  =  83.8219 uW   (48%)
+  Cell Internal Power  = 176.5688 uW   (52%)
+  Net Switching Power  = 161.3185 uW   (48%)
                          ---------
-Total Dynamic Power    = 175.8770 uW  (100%)
+Total Dynamic Power    = 337.8873 uW  (100%)
 
-Cell Leakage Power     =  67.1634 uW
+Cell Leakage Power     = 111.3389 uW
 
 Information: report_power power group summary does not include estimated clock tree power. (PWR-789)
 
@@ -57,8 +60,8 @@ memory             0.0000            0.0000            0.0000            0.0000 
 black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
 clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
 register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
-sequential     -3.1102e+00            4.1632        3.6820e+07           37.8734 (  17.06%)
-combinational     95.1653           58.6284        3.0343e+07          184.1367  (  82.94%)
+sequential     -7.2164e+00            6.9120        6.0295e+07           59.9901 (  14.72%)
+combinational    183.7851          112.6599        5.1044e+07          347.4896  (  85.28%)
 --------------------------------------------------------------------------------------------------
-Total             92.0551 uW        62.7916 uW     6.7163e+07 pW       222.0101 uW
+Total            176.5687 uW       119.5720 uW     1.1134e+08 pW       407.4797 uW
 1

@@ -71,6 +71,18 @@ E_port_remove = 0;
 W_port_remove = 0;
 L_port_remove = 0;
 
+N_port_select = '1;
+S_port_select = '1;
+E_port_select = '1;
+W_port_select = '1;
+L_port_select = '1;
+
+N_credit_inc = 0;
+S_credit_inc = 0;
+E_credit_inc = 0;
+W_credit_inc = 0;
+L_credit_inc = 0;
+
 	if(N_valid_i) begin
 		//assert(NORTH);
 		if (!NORTH) begin
