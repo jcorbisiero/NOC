@@ -34,7 +34,7 @@ define_design_lib WORK -path ./WORK
 set RTL_PATH  "../rtl/router/"
 set myFiles [glob $RTL_PATH/*]
 set fileFormat sverilog              ;# verilog or sverilog
-set basename top_router                     ;# Top-level module name
+set basename router                     ;# Top-level module name
 set CLK "clk"                  ;# The name of your clock 
 set virtual 0                        ;# 1 if virtual clock, 0 if real clock
 
