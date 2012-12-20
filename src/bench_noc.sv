@@ -37,13 +37,13 @@ class noc_checker;	//checker class
 	
 	Constants c;	
 	
-	function check_result(int dut_data, int dut_enable, int golden_data, noc_env env);
+	function check_result(int dut_data, int dut_enable, int golden_data, noc_env env, int x, int y);
 		if (dut_enable || golden_data > 0) begin
 			if (dut_data != golden_data) begin
-				$display("Error in cycle %d", env.cycle);
+				$display("Error in cycle %d AT X: %d  Y:%d", env.cycle, x, y);
 				$display("DUT data: %d", dut_data);
 				$display("Golden data: %d", golden_data);
-				$exit();
+				//$exit();
 			end
 		end
 	endfunction
@@ -259,6 +259,8 @@ program tb_noc (
         packet = new(env);
         packet.randomize();
 
+	$display("---------------------------------------------");
+	$display("Cycle: %d", env.cycle);
 	
 	reset_interfaces();
 
@@ -277,22 +279,22 @@ program tb_noc (
 	        
         noc.golden_result();
 
-	checker.check_result(ifc_0_0_to.data, ifc_0_0_to.enable, noc.test[0][0].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_1_0_to.data, ifc_1_0_to.enable, noc.test[1][0].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_2_0_to.data, ifc_2_0_to.enable, noc.test[2][0].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_3_0_to.data, ifc_3_0_to.enable, noc.test[3][0].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_0_1_to.data, ifc_0_1_to.enable, noc.test[0][1].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_1_1_to.data, ifc_1_1_to.enable, noc.test[1][1].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_2_1_to.data, ifc_2_1_to.enable, noc.test[2][1].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_3_1_to.data, ifc_3_1_to.enable, noc.test[3][1].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_0_2_to.data, ifc_0_2_to.enable, noc.test[0][2].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_1_2_to.data, ifc_1_2_to.enable, noc.test[1][2].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_2_2_to.data, ifc_2_2_to.enable, noc.test[2][2].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_3_2_to.data, ifc_3_2_to.enable, noc.test[3][2].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_0_3_to.data, ifc_0_3_to.enable, noc.test[0][3].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_1_3_to.data, ifc_1_3_to.enable, noc.test[1][3].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_2_3_to.data, ifc_2_3_to.enable, noc.test[2][3].outputs[c.LOCAL-1], env);
-	checker.check_result(ifc_3_3_to.data, ifc_3_3_to.enable, noc.test[3][3].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_0_0_to.data, ifc_0_0_to.enable, noc.test[0][0].outputs[c.LOCAL-1], env, 0, 0);
+	checker.check_result(ifc_1_0_to.data, ifc_1_0_to.enable, noc.test[1][0].outputs[c.LOCAL-1], env, 1, 0);
+	checker.check_result(ifc_2_0_to.data, ifc_2_0_to.enable, noc.test[2][0].outputs[c.LOCAL-1], env, 2, 0);
+	checker.check_result(ifc_3_0_to.data, ifc_3_0_to.enable, noc.test[3][0].outputs[c.LOCAL-1], env, 3, 0);
+	checker.check_result(ifc_0_1_to.data, ifc_0_1_to.enable, noc.test[0][1].outputs[c.LOCAL-1], env, 0, 0);
+	checker.check_result(ifc_1_1_to.data, ifc_1_1_to.enable, noc.test[1][1].outputs[c.LOCAL-1], env, 1, 0);
+	checker.check_result(ifc_2_1_to.data, ifc_2_1_to.enable, noc.test[2][1].outputs[c.LOCAL-1], env, 2, 0);
+	checker.check_result(ifc_3_1_to.data, ifc_3_1_to.enable, noc.test[3][1].outputs[c.LOCAL-1], env, 3, 0);
+	checker.check_result(ifc_0_2_to.data, ifc_0_2_to.enable, noc.test[0][2].outputs[c.LOCAL-1], env, 0, 0);
+	checker.check_result(ifc_1_2_to.data, ifc_1_2_to.enable, noc.test[1][2].outputs[c.LOCAL-1], env, 1, 0);
+	checker.check_result(ifc_2_2_to.data, ifc_2_2_to.enable, noc.test[2][2].outputs[c.LOCAL-1], env, 2, 0);
+	checker.check_result(ifc_3_2_to.data, ifc_3_2_to.enable, noc.test[3][2].outputs[c.LOCAL-1], env, 3, 0);
+	checker.check_result(ifc_0_3_to.data, ifc_0_3_to.enable, noc.test[0][3].outputs[c.LOCAL-1], env, 0, 0);
+	checker.check_result(ifc_1_3_to.data, ifc_1_3_to.enable, noc.test[1][3].outputs[c.LOCAL-1], env, 1, 0);
+	checker.check_result(ifc_2_3_to.data, ifc_2_3_to.enable, noc.test[2][3].outputs[c.LOCAL-1], env, 2, 0);
+	checker.check_result(ifc_3_3_to.data, ifc_3_3_to.enable, noc.test[3][3].outputs[c.LOCAL-1], env,3, 0);
  
     endtask
 

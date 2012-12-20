@@ -1,3 +1,10 @@
+/*
+*	Bench for single router validation
+*
+*	Author: Ilan
+*	Date: 12/20/2012
+*/
+
 `include "router_test_classes.sv"
 
 program tb_router (	ifc n_ds_a, ifc n_ds_b,

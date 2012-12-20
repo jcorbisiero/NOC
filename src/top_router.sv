@@ -1,3 +1,10 @@
+/*
+*	Top file for single router validation
+*
+*	Author: Ilan
+*	Date: 12/20/2012
+*/
+
 //		`timescale 1ns/1ns
 
 module top_router();

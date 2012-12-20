@@ -1,3 +1,11 @@
+/*
+*	File to hold helper classes for bench(s)
+*	Contains simulated router used by both benchs
+*	Used by: bench_router.sv, bench_noc.sv
+*
+*	Author: Ilan
+*	Date: 12/20/2012
+*/
 
 class Constants;
 	static const int NORTH 	= 1;

@@ -1,3 +1,10 @@
+/*
+*	Top file for NOC validation testbench
+*
+*	Author: Ilan, Nina, Joe, Mitchell
+*	Date: 12/20/2012
+*/
+
 //		`timescale 1ns/1ns
 
 module top();
