@@ -1,3 +1,7 @@
+/* Authors: Joseph Corbisiero, Nina Berg, Ilan Elkobi, Mitchell Aahron
+ * This is the routing logic that will determine the correct
+ * direction to send a packet.
+ */
 module routeLogic #(parameter XCOORD = 1111, parameter YCOORD = 1111,
 			NORTH = 0, SOUTH = 0, EAST = 0, WEST = 0)
 (

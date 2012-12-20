@@ -1,3 +1,6 @@
+/* Authors: Joseph Corbisiero, Nina Berg, Ilan Elkobi, Mitchell Aahron
+ * This is the module for the east edge of the NOC.
+ */
 module eedge_router#(	parameter XCOORD = 1111,
 		parameter YCOORD = 1111 )
 (

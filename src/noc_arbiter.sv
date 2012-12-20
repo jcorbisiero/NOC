@@ -1,3 +1,6 @@
+/* Authors: Joseph Corbisiero, Nina Berg, Ilan Elkobi, Mitchell Aahron
+ * This is the arbiter module that selects the port's turn.
+ */
 module arbiter(
 	input clk,
 	input rst,

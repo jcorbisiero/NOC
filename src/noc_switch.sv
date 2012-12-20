@@ -1,3 +1,6 @@
+/* Authors: Joseph Corbisiero, Nina Berg, Ilan Elkobi, Mitchell Aahron
+ * This is the module for the crossbar swithc for a router.
+ */
 module crossbarSwitch(
 	input [15:0] N_data_i,
 	input [15:0] S_data_i,

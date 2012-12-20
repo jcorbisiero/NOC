@@ -1,3 +1,6 @@
+/* Authors: Joseph Corbisiero, Nina Berg, Ilan Elkobi, Mitchell Aahron
+ * This is the output port of a router.
+ */
 module outputPort(
 	input clk,
 	input rst,

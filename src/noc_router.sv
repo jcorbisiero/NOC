@@ -1,3 +1,6 @@
+/* Authors: Joseph Corbisiero, Nina Berg, Ilan Elkobi, Mitchell Aahron
+ * This is the module for a router in the NOC.
+ */
 module router#(	parameter XCOORD = 1111,
 		parameter YCOORD = 1111 )
 (
