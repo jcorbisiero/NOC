@@ -102,7 +102,7 @@ class noc_test;
 		/* Reset routers */
 		for(int i = 0; i < 4; i++) begin
 			for(int j = 0; j < 4; j++) begin
-				test[i][j].rst <= 1;
+				test[i][j].reset();
 			end
 		end
 		
@@ -119,13 +119,13 @@ class noc_test;
 				
 		for(int i = 0; i < 4; i++) begin
 			for(int j = 0; j < 4; j++) begin
-				test[i][j].inputs[c.LOCAL-1] = -1;
+				test[i][j].inputs[c.LOCAL-1] <= -1;
 				if( send_to[i][j] ) begin
 					test[i][j].inputs[c.LOCAL-1] = send_to[i][j]; 
 					$display("Sending input %d to(%d,%d)",
 						send_to[i][j], i, j );
 				end
-				test[i][j].rst <= rst;
+				test[i][j].rst = 0;
 				test[i][j].golden_result();
 			end
 		end
@@ -263,7 +263,7 @@ program tb_noc (
         $display("Cycle: %d", env.cycle);
         $display("X: %b Y: %b", env.x[0], env.y[0]); 
         
-        if( env.cycle == 4) begin
+        if( env.cycle == 4	) begin
         	ifc_0_0_from.data <= header;
         	ifc_0_0_from.enable <= 1;
         	noc.send_to[0][0] <= header;
