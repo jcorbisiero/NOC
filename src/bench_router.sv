@@ -99,8 +99,11 @@ program tb_router (	ifc n_ds_a, ifc n_ds_b,
         header4 = { 8'b00000000 , packet.x4, packet.y4 };
         header5 = { 8'b00000000 , packet.x5, packet.y5 };
         
+        header1 = { 8'b00000000 , 4'b0010, 4'b0001 };
+        
         
         $display("\n------------------------------------");
+        $display("Cycle: %d", env.cycle);
 	$display("After randomize - Rst:%d Reset_Density:%f",
 			packet.rst,env.reset_density);
 	
