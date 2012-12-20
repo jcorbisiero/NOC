@@ -276,6 +276,23 @@ program tb_noc (
         @(control.cb_s);
 	        
         noc.golden_result();
+
+	checker.check_result(ifc_0_0_to.data, ifc_0_0_to.enable, noc.test[0][0].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_1_0_to.data, ifc_1_0_to.enable, noc.test[1][0].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_2_0_to.data, ifc_2_0_to.enable, noc.test[2][0].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_3_0_to.data, ifc_3_0_to.enable, noc.test[3][0].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_0_1_to.data, ifc_0_1_to.enable, noc.test[0][1].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_1_1_to.data, ifc_1_1_to.enable, noc.test[1][1].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_2_1_to.data, ifc_2_1_to.enable, noc.test[2][1].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_3_1_to.data, ifc_3_1_to.enable, noc.test[3][1].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_0_2_to.data, ifc_0_2_to.enable, noc.test[0][2].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_1_2_to.data, ifc_1_2_to.enable, noc.test[1][2].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_2_2_to.data, ifc_2_2_to.enable, noc.test[2][2].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_3_2_to.data, ifc_3_2_to.enable, noc.test[3][2].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_0_3_to.data, ifc_0_3_to.enable, noc.test[0][3].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_1_3_to.data, ifc_1_3_to.enable, noc.test[1][3].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_2_3_to.data, ifc_2_3_to.enable, noc.test[2][3].outputs[c.LOCAL-1], env);
+	checker.check_result(ifc_3_3_to.data, ifc_3_3_to.enable, noc.test[3][3].outputs[c.LOCAL-1], env);
  
     endtask
 
