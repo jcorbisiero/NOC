@@ -66,12 +66,15 @@ module outputPort(
       end
 
       if (inc_credit_i) begin
-	 count = count + 1;
+	 /* We shouldnt need this check, but just in case */
+	 if (count == 5) count = 5;
+	 else count = count + 1;
 	 assert(count >= 0 && count <= 5);
       end 
 
       if (!empty && count != 0) begin
-	 count = count - 1;
+	 if (count == 0) count = 0;
+	 else count = count - 1;
 	 assert(count >= 0 && count <= 5);
       end
       
