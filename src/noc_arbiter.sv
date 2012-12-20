@@ -2,11 +2,11 @@ module arbiter(
 	input clk,
 	input rst,
 	
-	output logic [4:0] N_turn_o,
-	output logic [4:0] S_turn_o,
-	output logic [4:0] E_turn_o,
-	output logic [4:0] W_turn_o,
-	output logic [4:0] L_turn_o
+	output [4:0] N_turn_o,
+	output [4:0] S_turn_o,
+	output [4:0] E_turn_o,
+	output [4:0] W_turn_o,
+	output [4:0] L_turn_o
 );
 
 reg [4:0] NTurn;
@@ -15,15 +15,15 @@ reg [4:0] ETurn;
 reg [4:0] WTurn;
 reg [4:0] LTurn;
 
-always_comb begin
-	N_turn_o <= NTurn;
-	S_turn_o <= STurn;
-	E_turn_o <= ETurn;
-	W_turn_o <= WTurn;
-	L_turn_o <= LTurn;
+
+assign N_turn_o = NTurn;
+assign S_turn_o = STurn;
+assign E_turn_o = ETurn;
+assign W_turn_o = WTurn;
+assign L_turn_o = LTurn;
 	
 	//$display("STurn: %b, STurn_o: %b",STurn, S_turn_o);
-end
+
 
 always_ff @(posedge clk) begin
 	//$display("------ Arbiter ------");
