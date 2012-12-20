@@ -6,7 +6,7 @@ interface ifc(input bit clk);
 	logic [15:0] data;
 	logic credit;
   	
-	clocking cb_s @(negedge clk);
+	clocking cb_s @(posedge clk);
 		output posedge rst;
 
 		output posedge enable;
@@ -14,12 +14,12 @@ interface ifc(input bit clk);
 		input posedge credit;
   	endclocking
   	
-  	clocking cb_r @(negedge clk);
+  	clocking cb_r @(posedge clk);
 		output posedge rst;
 
-		input negedge enable;
-		input negedge data;
-		output negedge credit;
+		input posedge enable;
+		input posedge data;
+		output posedge credit;
   	endclocking
 
   	modport send (  		

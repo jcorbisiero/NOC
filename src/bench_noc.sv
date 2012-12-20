@@ -7,6 +7,12 @@ class noc_env;
     bit verbose = 1;
     
     real reset_density = 0.0;
+    
+    rand logic [3:0] x [15:0];
+    rand logic [3:0] y [15:0];
+    
+    constraint x1 { foreach( x[i] ) x[i] >= 1 && x[i] <= 8; }
+    constraint y1 { foreach( y[i] ) y[i] >= 1 && y[i] <= 8; }
 
     function configure(string filename);
         int file, value, seed, chars_returned;
@@ -251,10 +257,11 @@ program tb_noc (
         control.cb_s.rst <= 0;
         
         ifc_0_0_from.data <= 0;
-	ifc_0_0_from.enable <= 0;
+	ifc_0_0_from.enable <= 0; 
         noc.send_to[0][0] <= 0;
         
         $display("Cycle: %d", env.cycle);
+        $display("X: %b Y: %b", env.x[0], env.y[0]); 
         
         if( env.cycle == 4) begin
         	ifc_0_0_from.data <= header;

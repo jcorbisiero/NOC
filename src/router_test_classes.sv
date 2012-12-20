@@ -82,7 +82,7 @@ class arbiter;
 		turns[4] = turns[4] >> 1;
 		if( turns[4] == 5'b00001) turns[4] = 5'b10000;
 		
-		//$display("Arbiter: %b %b %b %b %b", turns[0],turns[1],turns[2],turns[3], turns[4]);
+		$display("Arbiter: %b %b %b %b %b", turns[0],turns[1],turns[2],turns[3], turns[4]);
 		
 	endfunction
 
