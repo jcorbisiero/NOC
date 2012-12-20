@@ -383,12 +383,14 @@ class router_test;
 				$exit();
 			end
 			
+			$display( "Placing onto output buff of %s", 
+				output_buff.name);
 			outputs[output_buff.dir - 1] = output_buff.pop();
 
 			credits[ output_buff.dir - 1] = credits[ output_buff.dir - 1] - 1;
 
-			//$display("OUTPUT %s should be %b",
-			//	output_buff.name, outputs[output_buff.dir - 1]);
+			$display("OUTPUT %s should be %b",
+				output_buff.name, outputs[output_buff.dir - 1]);
 		end
 		
 	endfunction;
@@ -537,7 +539,7 @@ class router_test;
 	if( neighbors[3] ) begin
 		neighbors[3].inputs[2] = -1;
 		if( outputs[3] > 0 ) begin
-			neighbors[2].handle_input(c.EAST, outputs[3]);
+			neighbors[3].handle_input(c.EAST, outputs[3]);
 		end
 		//$display("Sending to neighbor 3");
 	end
