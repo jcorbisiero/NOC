@@ -74,7 +74,8 @@ always_ff @(posedge clk) begin
 	end
 
 	if (inc_credit_i) begin
-		count = count + 1;
+		if (count == 5) count = 5;
+		else count = count + 1;
 		assert(count >= 0 && count <= 5);
 	end 
 
