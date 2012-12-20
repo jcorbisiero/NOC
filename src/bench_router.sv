@@ -140,7 +140,6 @@ program tb_router (	ifc n_ds_a, ifc n_ds_b,
         	$display("Header: %b (%d)", header5,header5);
 	        activate_message(packet.input_port5,header5);
         end 
-        end
         
         @(ctrl_ds.cb_s);
         
