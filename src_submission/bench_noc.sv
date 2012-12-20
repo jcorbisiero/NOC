@@ -130,7 +130,14 @@ class noc_test;
       end
       
    endfunction
-   
+  
+   function send_to_all_neighbors();
+      for (int i = 0; i < 4; i++) begin
+         for (int j = 0; j < 4; j++) begin
+            test[i][j].send_to_neighbors();
+         end
+      end
+   endfunction 
    
    function void golden_result();
       
@@ -138,6 +145,9 @@ class noc_test;
 	 reset();
 	 return;
       end
+
+      /* Send messages to all neighbors */
+      send_to_all_neighbors();
       
       for(int i = 0; i < 4; i++) begin
 	 for(int j = 0; j < 4; j++) begin

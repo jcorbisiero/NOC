@@ -175,7 +175,7 @@ module routeLogic #(parameter XCOORD = 1111, parameter YCOORD = 1111,
 	       end
 
 	    end else if (!L_port_full && (L_turn == 5'b01000)) begin
-	       L_port_select = 001;
+	       L_port_select = 3'b001;
 	       S_port_remove = 1;
 	       L_port_enable = 1;
 	       S_credit_inc = 1;
@@ -200,7 +200,7 @@ module routeLogic #(parameter XCOORD = 1111, parameter YCOORD = 1111,
 	 end else if (E_data_i[7:4] == XCOORD 
 			&& E_data_i[3:0] == YCOORD) begin
 	    if(!L_port_full && (L_turn == 5'b00100)) begin
-	       L_port_select = 010;
+	       L_port_select = 3'b010;
 	       E_port_remove = 1;
 	       L_port_enable = 1;
 	       E_credit_inc = 1;
@@ -220,7 +220,7 @@ module routeLogic #(parameter XCOORD = 1111, parameter YCOORD = 1111,
 	 if (W_data_i[7:4] > XCOORD && W_data_i[3:0] == YCOORD) begin
 	    assert(EAST);
 	    if ((!E_port_full) && (E_turn == 5'b00010)) begin
-	       E_port_select = 011;
+	       E_port_select = 3'b011;
 	       W_port_remove = 1;
 	       E_port_enable = 1;
 	       W_credit_inc = 1;
@@ -229,7 +229,7 @@ module routeLogic #(parameter XCOORD = 1111, parameter YCOORD = 1111,
 
 	 else if (W_data_i[7:4] == XCOORD && W_data_i[3:0] == YCOORD) begin
 	    if(!L_port_full && (L_turn == 5'b00010)) begin
-	       L_port_select = 011;
+	       L_port_select = 3'b011;
 	       W_port_remove = 1;
 	       L_port_enable = 1;
 	       W_credit_inc = 1;
