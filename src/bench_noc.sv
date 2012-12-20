@@ -447,6 +447,12 @@ program tb_noc (
 		ifc_2_3_from.enable <= 0;
 		ifc_3_3_from.data <= 0;
 		ifc_3_3_from.enable <= 0;
+		
+		for(int i = 0; i < 4; i++) begin
+			for(int j = 0; j < 4; j++)begin
+				noc.send_to[i][j] = 0;
+			end
+		end
     
     endfunction
 endprogram

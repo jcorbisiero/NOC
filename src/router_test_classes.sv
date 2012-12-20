@@ -389,8 +389,8 @@ class router_test;
 
 			credits[ output_buff.dir - 1] = credits[ output_buff.dir - 1] - 1;
 
-			$display("OUTPUT %s should be %b",
-				output_buff.name, outputs[output_buff.dir - 1]);
+			$display("OUTPUT %s should be %b (dir:%d)",
+				output_buff.name, outputs[output_buff.dir - 1], output_buff.dir);
 		end
 		
 	endfunction;
@@ -460,16 +460,16 @@ class router_test;
         	end	
         	
         	//N_output_buff.print();
-        	//$display("%d",delayed_outputs[0]);
+        	//$display("%d",outputs[0]);
+        	//$display("%d",outputs[1]);
+		//$display("%d",outputs[2]);
+		//$display("%d",outputs[3]);
+        	//$display("%d",outputs[4]);
         	/*
         	L_input_buff.print();
         	E_input_buff.print();
         	S_input_buff.print();
         	W_input_buff.print();
-        	$display("%d",delayed_outputs[1]);
-        	$display("%d",delayed_outputs[2]);
-        	$display("%d",delayed_outputs[3]);
-        	$display("%d",delayed_outputs[4]);
         	*/
         	
 		/* Based on negedge/posedge rst -- this comes
