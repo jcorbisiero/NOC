@@ -266,7 +266,7 @@ program tb_noc (
 	        
         noc.golden_result();
         
-        $display("IFC to: %d %d", ifc_0_0_to.data, ifc_0_0_to.enable);
+        $display("IFC to: %d %d", ifc_1_0_to.data, ifc_1_0_to.enable);
         $display("Local: %d", noc.test[1][0].delayed_outputs[c.LOCAL-1]);
         
         /*
