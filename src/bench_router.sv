@@ -97,10 +97,7 @@ program tb_router (	ifc n_ds_a, ifc n_ds_b,
         header2 = { 8'b00000000 , packet.x2, packet.y2 };
         header3 = { 8'b00000000 , packet.x3, packet.y3 };
         header4 = { 8'b00000000 , packet.x4, packet.y4 };
-        header5 = { 8'b00000000 , packet.x5, packet.y5 };
-        
-        header1 = { 8'b00000000 , 4'b0010, 4'b0001 };
-        
+        header5 = { 8'b00000000 , packet.x5, packet.y5 };        
         
         $display("\n------------------------------------");
         $display("Cycle: %d", env.cycle);
@@ -111,13 +108,11 @@ program tb_router (	ifc n_ds_a, ifc n_ds_b,
 	test.rst 	<= (packet.rst < env.reset_density);
         ctrl_ds.cb_s.rst <= (packet.rst < env.reset_density);
         
-        //if( packet.rst > 7) begin
-        	if( env.input1_active ) begin
-        		$display("Activating port 1");
-        		$display("Header: %b (%d)", header1,header1);
-        		activate_message(packet.input_port1,header1);
-        	end 
-        //end
+	if( env.input1_active ) begin
+		$display("Activating port 1");
+		$display("Header: %b (%d)", header1,header1);
+		activate_message(packet.input_port1,header1);
+	end 
         if( env.input2_active ) begin
         	$display("Activating port 2");
         	$display("Header: %b (%d)", header2,header2);
@@ -138,6 +133,7 @@ program tb_router (	ifc n_ds_a, ifc n_ds_b,
         	$display("Header: %b (%d)", header5,header5);
 	        activate_message(packet.input_port5,header5);
         end 
+        end
         
         @(ctrl_ds.cb_s);
         

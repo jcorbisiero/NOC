@@ -6,13 +6,9 @@ class noc_env;
     int warmup_time = 2;
     bit verbose = 1;
     
+    int routers_transmitting = 1;
+    
     real reset_density = 0.0;
-    
-    rand logic [3:0] x [15:0];
-    rand logic [3:0] y [15:0];
-    
-    constraint x1 { foreach( x[i] ) x[i] >= 1 && x[i] <= 8; }
-    constraint y1 { foreach( y[i] ) y[i] >= 1 && y[i] <= 8; }
 
     function configure(string filename);
         int file, value, seed, chars_returned;
@@ -30,14 +26,8 @@ class noc_env;
             else if("RESET_DENSITY" == param) begin
             	this.reset_density = value;
             end
-            else if("INPUT1" == param) begin
-            	/*$display("In input1");
-            	if( value == 1 ) input1_active = 1; 
-            	chars_returned = $fscanf(file, "%d %d %d %d %d", 
-            		use_input1[0], use_input1[1], use_input1[2], use_input1[3], use_input1[4]);
-            	$display("%d %d %d %d %d", 
-            		use_input1[0], use_input1[1], use_input1[2], use_input1[3], use_input1[4]);
-            	*/
+            else if("ROUTERS" == param) begin
+            	routers_transmitting = value;
             end
         end
     endfunction
@@ -59,7 +49,17 @@ class noc_transaction;
 	noc_env env;
 
     	rand int rst;
-    
+    	    
+	rand logic [3:0] x [15:0];
+	rand logic [3:0] y [15:0];
+	rand int addr_x [15:0];
+	rand int addr_y [15:0];
+
+	constraint x1 { foreach( x[i] ) x[i] inside {1,2,4,8}; }
+	constraint y1 { foreach( y[i] ) y[i] inside {1,2,4,8}; }
+    	constraint addr_x1 { foreach( addr_x[i] ) addr_x[i] inside {1,2,4,8}; }
+	constraint addr_y1 { foreach( addr_y[i] ) addr_y[i] inside {1,2,4,8}; }
+	
 	function new(noc_env env);
 		this.env = env;
 	endfunction
@@ -103,6 +103,7 @@ class noc_test;
 		for(int i = 0; i < 4; i++) begin
 			for(int j = 0; j < 4; j++) begin
 				test[i][j].reset();
+				send_to[i][j] = 0;
 			end
 		end
 		
@@ -250,84 +251,37 @@ program tb_noc (
         cycle = env.cycle;
         packet = new(env);
         packet.randomize();
-        
-        header = { 8'b00000000 , 4'b0010, 4'b0001 };
+
+	
+	reset_interfaces();
+
         
         noc.rst 	 <= 0;
         control.cb_s.rst <= 0;
         
-        ifc_0_0_from.data <= 0;
-	ifc_0_0_from.enable <= 0; 
-        noc.send_to[0][0] <= 0;
-        
-        $display("Cycle: %d", env.cycle);
-        $display("X: %b Y: %b", env.x[0], env.y[0]); 
-        
-        if( env.cycle == 4	) begin
-        	ifc_0_0_from.data <= header;
-        	ifc_0_0_from.enable <= 1;
-        	noc.send_to[0][0] <= header;
+        for( int i = 0; i < env.routers_transmitting; i++) begin
+        	header = {8'b00000000, packet.x[0], packet.y[0]};
+        	activate_interface(packet.addr_x[i],packet.addr_y[i],header);
+        	$display("Sending packet to (%d,%d) with header %d (%b)",
+        		packet.addr_x[i], packet.addr_y[i], header, header);
         end
         
         @(control.cb_s);
 	        
         noc.golden_result();
-        
-        $display("IFC to: %d %d", ifc_1_0_to.data, ifc_1_0_to.enable);
-        $display("Local: %d", noc.test[1][0].delayed_outputs[c.LOCAL-1]);
-        
-        /*
-        header1 = { 8'b00000000 , packet.x1, packet.y1 };
-        header2 = { 8'b00000000 , packet.x2, packet.y2 };
-        header3 = { 8'b00000000 , packet.x3, packet.y3 };
-        header4 = { 8'b00000000 , packet.x4, packet.y4 };
-        header5 = { 8'b00000000 , packet.x5, packet.y5 };
-        
-        
-        $display("\n------------------------------------");
-	$display("After randomize - Rst:%d Reset_Density:%f",
-			packet.rst,env.reset_density);
-	
-	
-	test.rst 	<= (packet.rst < env.reset_density);
-        ctrl_ds.cb_s.rst <= (packet.rst < env.reset_density);
-        
-        //if( packet.rst > 7) begin
-        	if( env.input1_active ) begin
-        		$display("Activating port 1");
-        		$display("Header: %b (%d)", header1,header1);
-        		activate_message(packet.input_port1,header1);
-        	end 
-        //end
-        
-        @(ctrl_ds.cb_s);
-        
-        //test.golden_result();
-        
-	$display("------------------------------------------");
-	$display("CHECKING");
-	
-	//Reset credit inputs -- here because good values to to go
-	//	through @(ctrl_ds.cb_s) 
-	n_ds_a.cb_r.credit <= 0;
-	l_ds_a.cb_r.credit <= 0;
-	
-	received = checker.check_results(n_ds_a.cb_r.data, n_ds_a.cb_r.enable, test.delayed_outputs[c.NORTH -1], c.NORTH, env);
-	if( received ) n_ds_a.cb_r.credit <= 1;
-	
-	*/
+ 
     endtask
 
     initial begin
 	noc = new();        
         checker = new();
         env = new();
-        env.configure("env.txt");
+        env.configure("noc_env.txt");
         packet = new(env);
       
         $display("Starting validation with noc");
         
-        noc.print();
+        //noc.print();
 
         // warm up
         repeat (env.warmup_time) begin
@@ -342,6 +296,133 @@ program tb_noc (
         $display("\n\n----%d cycles completed succesfully ----\n\n", env.cycle);
     end
     
+    function void activate_interface(int addr_x, int addr_y, int header);;
+    
+    	if( addr_x == 1 && addr_y == 1) begin
+    		ifc_0_0_from.data <= header;
+        	ifc_0_0_from.enable <= 1;
+        	noc.send_to[0][0] = header;
+    	end 
+    	else if( addr_x == 2 && addr_y == 1) begin
+	    	ifc_1_0_from.data <= header;
+	        ifc_1_0_from.enable <= 1;
+	        noc.send_to[1][0] = header;
+    	end
+    	else if( addr_x == 4 && addr_y == 1) begin
+	    	ifc_2_0_from.data <= header;
+	        ifc_2_0_from.enable <= 1;
+	        noc.send_to[2][0] = header;
+    	end
+    	else if( addr_x == 8 && addr_y == 1) begin
+	    	ifc_3_0_from.data <= header;
+	        ifc_3_0_from.enable <= 1;
+	        noc.send_to[3][0] = header;
+    	end
+    	
+    	/*Row two*/
+    	if( addr_x == 1 && addr_y == 2) begin
+		ifc_0_1_from.data <= header;
+		ifc_0_1_from.enable <= 1;
+		noc.send_to[0][1] = header;
+	end 
+	else if( addr_x == 2 && addr_y == 2) begin
+		ifc_1_1_from.data <= header;
+		ifc_1_1_from.enable <= 1;
+		noc.send_to[1][1] = header;
+	end
+	else if( addr_x == 4 && addr_y == 2) begin
+		ifc_2_1_from.data <= header;
+		ifc_2_1_from.enable <= 1;
+		noc.send_to[2][1] = header;
+	end
+	else if( addr_x == 8 && addr_y == 2) begin
+		ifc_3_1_from.data <= header;
+		ifc_3_1_from.enable <= 1;
+		noc.send_to[3][1] = header;
+    	end
+
+	/*Row three*/
+    	if( addr_x == 1 && addr_y == 4) begin
+		ifc_0_2_from.data <= header;
+		ifc_0_2_from.enable <= 1;
+		noc.send_to[0][2] = header;
+	end 
+	else if( addr_x == 2 && addr_y == 4) begin
+		ifc_1_2_from.data <= header;
+		ifc_1_2_from.enable <= 1;
+		noc.send_to[1][2] = header;
+	end
+	else if( addr_x == 4 && addr_y == 4) begin
+		ifc_2_2_from.data <= header;
+		ifc_2_2_from.enable <= 1;
+		noc.send_to[2][2] = header;
+	end
+	else if( addr_x == 8 && addr_y == 4) begin
+		ifc_3_2_from.data <= header;
+		ifc_3_2_from.enable <= 1;
+		noc.send_to[3][2] = header;
+    	end
+    	
+    	/*Row four*/
+	if( addr_x == 1 && addr_y == 8) begin
+		ifc_0_3_from.data <= header;
+		ifc_0_3_from.enable <= 1;
+		noc.send_to[0][3] = header;
+	end 
+	else if( addr_x == 2 && addr_y == 8) begin
+		ifc_1_3_from.data <= header;
+		ifc_1_3_from.enable <= 1;
+		noc.send_to[1][3] = header;
+	end
+	else if( addr_x == 4 && addr_y == 8) begin
+		ifc_2_3_from.data <= header;
+		ifc_2_3_from.enable <= 1;
+		noc.send_to[2][3] = header;
+	end
+	else if( addr_x == 8 && addr_y == 8) begin
+		ifc_3_3_from.data <= header;
+		ifc_3_3_from.enable <= 1;
+		noc.send_to[3][3] = header;
+    	end
+    
+    endfunction
+    
+    function reset_interfaces();
+    	
+		ifc_0_0_from.data <= 0;
+		ifc_0_0_from.enable <= 0;
+		ifc_1_0_from.data <= 0;
+		ifc_1_0_from.enable <= 0;
+		ifc_2_0_from.data <= 0;
+		ifc_2_0_from.enable <= 0;
+		ifc_3_0_from.data <= 0;
+		ifc_3_0_from.enable <= 0;
+		ifc_0_1_from.data <= 0;
+		ifc_0_1_from.enable <= 0;
+		ifc_1_1_from.data <= 0;
+		ifc_1_1_from.enable <= 0;
+		ifc_2_1_from.data <= 0;
+		ifc_2_1_from.enable <= 0;
+		ifc_3_1_from.data <= 0;
+		ifc_3_1_from.enable <= 0;
+		ifc_0_2_from.data <= 0;
+		ifc_0_2_from.enable <= 0;
+		ifc_1_2_from.data <= 0;
+		ifc_1_2_from.enable <= 0;
+		ifc_2_2_from.data <= 0;
+		ifc_2_2_from.enable <= 0;
+		ifc_3_2_from.data <= 0;
+		ifc_3_2_from.enable <= 0;
+		ifc_0_3_from.data <= 0;
+		ifc_0_3_from.enable <= 0;
+		ifc_1_3_from.data <= 0;
+		ifc_1_3_from.enable <= 0;
+		ifc_2_3_from.data <= 0;
+		ifc_2_3_from.enable <= 0;
+		ifc_3_3_from.data <= 0;
+		ifc_3_3_from.enable <= 0;
+    
+    endfunction
 endprogram
 
 function void noc_test::connect_all_routers(router_test test [3:0][3:0]);

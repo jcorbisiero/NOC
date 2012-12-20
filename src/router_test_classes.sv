@@ -82,7 +82,7 @@ class arbiter;
 		turns[4] = turns[4] >> 1;
 		if( turns[4] == 5'b00001) turns[4] = 5'b10000;
 		
-		$display("Arbiter: %b %b %b %b %b", turns[0],turns[1],turns[2],turns[3], turns[4]);
+		//$display("Arbiter: %b %b %b %b %b", turns[0],turns[1],turns[2],turns[3], turns[4]);
 		
 	endfunction
 
@@ -411,7 +411,7 @@ class router_test;
 		
 		if (rst) begin
 			reset();
-			//$display("Resetting golden model");
+			$display("Resetting golden model");
 			return;
 		end
 		
@@ -501,28 +501,36 @@ class router_test;
     	/* Send N message to S port of neighbor*/
     	if( neighbors[0]) begin
     		neighbors[0].inputs[1] = -1;
-    		if(outputs[0] > 0) neighbors[0].inputs[1] = outputs[0];
+    		if(outputs[0] > 0) begin 
+    			neighbors[0].handle_input(c.SOUTH, outputs[0]);
+    		end
     		//$display("Sending to neighbor 0");
     	end
     	
     	/* Send S message to N port of neighbor*/
 	if( neighbors[1]) begin
 		neighbors[1].inputs[0] = -1;
-		if(outputs[1] > 0) neighbors[1].inputs[0] = outputs[1];
+		if(outputs[1] > 0) begin
+			neighbors[1].handle_input(c.NORTH, outputs[1]);
+		end
 		//$display("Sending to neighbor 1");
     	end
     	
     	/* Send E message to W port of neighbor*/
 	if( neighbors[2]) begin
 	    	neighbors[2].inputs[3] = -1;
-	    	if(outputs[2] > 0) neighbors[2].inputs[3] = outputs[2];
+	    	if(outputs[2] > 0) begin
+	    		neighbors[2].handle_input(c.WEST, outputs[2]);
+		end
 		//$display("Sending to neighbor 2");
 	end
 	
 	/* Send W message to E port of neighbor*/
 	if( neighbors[3] ) begin
 		neighbors[3].inputs[2] = -1;
-		if( outputs[3] > 0 ) neighbors[3].inputs[2] = outputs[3];
+		if( outputs[3] > 0 ) begin
+			neighbors[2].handle_input(c.EAST, outputs[3]);
+		end
 		//$display("Sending to neighbor 3");
 	end
     endfunction
