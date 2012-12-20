@@ -31,11 +31,11 @@ define_design_lib WORK -path ./WORK
 # below are parameters that you will want to set for each design 
 ##################################################################
 
-set RTL_PATH  "../rtl/router/"
+set RTL_PATH  "./rtl/"
 set myFiles [glob $RTL_PATH/*]
-set fileFormat sverilog              ;# verilog or sverilog
-set basename router                     ;# Top-level module name
-set CLK "clk"                  ;# The name of your clock 
+set fileFormat verilog              ;# verilog or sverilog
+set basename cam                     ;# Top-level module name
+set CLK "sig.clock"                  ;# The name of your clock 
 set virtual 0                        ;# 1 if virtual clock, 0 if real clock
 
 # Timing and loading information                
@@ -194,9 +194,9 @@ if {  $write_sdc == 1 } {
 # synthesized result back in to synopsys later in XG mode (ddc format) 
 if {  $write_ddc == 1 } {
     set filename [format "%s%s" $filebase ".ddc"]
-    write -format ddc -hierarchy -output $filename
+    write -format ddc -hierarchy -o $filename
     set mw_filename [format "%s%s" $filebase "_DCT"]
-    write_milkyway -overwrite -output $mw_filename
+    write_milkyway -overwrite -o $mw_filename
 }
 
 # report on the results from synthesis                     

@@ -1,0 +1,71 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : router
+Version: F-2011.09-SP2
+Date   : Wed Dec 19 22:19:52 2012
+****************************************
+
+Operating Conditions: TYPICAL   Library: saed90nm_typ
+Wire Load Model Mode: enclosed
+
+  Startpoint: nOutPort/buffer2/U1/U1/rd_addr_int_reg[0]
+              (rising edge-triggered flip-flop)
+  Endpoint: N_ifc_o.data[15]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  router             16000                 saed90nm_typ
+  outputPort_4       8000                  saed90nm_typ
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  nOutPort/buffer2/U1/U1/rd_addr_int_reg[0]/CLK (DFFX1)
+                                                          0.00       0.00 r
+  nOutPort/buffer2/U1/U1/rd_addr_int_reg[0]/Q (DFFX1)     0.17       0.17 f
+  nOutPort/U108/Q (AND3X1)                                0.16       0.34 f
+  nOutPort/U124/Q (AO22X1)                                0.20       0.53 f
+  nOutPort/U82/QN (NOR2X0)                                0.08       0.61 r
+  nOutPort/U106/QN (NAND2X1)                              0.08       0.70 f
+  nOutPort/data_o[15] (outputPort_4)                      0.00       0.70 f
+  N_ifc_o.data[15] (inout)                                0.00       0.70 f
+  data arrival time                                                  0.70
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+1
+ 
+****************************************
+Report : area
+Design : router
+Version: F-2011.09-SP2
+Date   : Wed Dec 19 22:19:52 2012
+****************************************
+
+Library(s) Used:
+
+    saed90nm_typ (File: /sim/synopsys/SAED_EDK90nm/Digital_Standard_Cell_Library/synopsys/models/saed90nm_typ.db)
+
+Number of ports:                          202
+Number of nets:                           192
+Number of cells:                           26
+Number of combinational cells:             18
+Number of sequential cells:                 4
+Number of macros:                           0
+Number of buf/inv:                          1
+Number of references:                       8
+
+Combinational area:       6699.110322
+Noncombinational area:    7045.631918
+Net Interconnect area:     890.188615  
+
+Total cell area:          13744.742240
+Total area:               14634.930855
+1
