@@ -37,10 +37,17 @@ class noc_checker;	//checker class
 	
 	Constants c;	
 	
-	function int check_results(int data_o, int enable_o, int value, int dir, router_env env);
-		
-		return 0;
-	endfunction  
+	function check_result(int dut_data, int dut_enable, int golden_data, noc_env env);
+		if (dut_enable || golden_data > 0) begin
+			if (dut_data != golden_data) begin
+				$display("Error in cycle %d", env.cycle);
+				$display("DUT data: %d", dut_data);
+				$display("Golden data: %d", golden_data);
+				$exit();
+			end
+		end
+	endfunction
+	
 endclass
 
 
