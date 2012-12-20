@@ -1,3 +1,6 @@
+/* Authors: Joseph Corbisiero, Nina Berg, Ilan Elkobi, Mitchell Aahron
+ * This is the module for the input side of a router.
+ */
 module inputPort
 (
 	input clk,

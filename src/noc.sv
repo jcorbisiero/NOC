@@ -1,3 +1,6 @@
+/* Authors: Joseph Corbisiero, Nina Berg, Ilan Elkobi, Mitchell Aahron
+ * This is the module for the NOC consisting of 16 routers.
+ */
 module noc (
 	ifc.control control,
 	ifc ifc_0_0_to,

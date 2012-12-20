@@ -1,3 +1,6 @@
+/* Authors: Joseph Corbisiero, Nina Berg, Ilan Elkobi, Mitchell Aahron
+ * This is the module for the north east corner router of the NOC.
+ */
 module ne_router#(parameter XCOORD = 1111, parameter YCOORD = 1111)
 (
 	ifc S_ifc_o,
