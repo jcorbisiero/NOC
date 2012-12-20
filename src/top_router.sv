@@ -30,11 +30,11 @@ module top_router();
 		Local_to.bench, Local_from.bench,
 		ctrl.bench );
 
-	nw_router#(.XCOORD('b0001), .YCOORD('b0001)) dut
-	(
+	router#(.XCOORD('b0001), .YCOORD('b0001)) dut
+	(	North_to.send, North_from.receive,
 		South_to.send, South_from.receive,
 		East_to.send, East_from.receive,
-
+		West_to.send, West_from.receive,
 		Local_to.send, Local_from.receive,
 		ctrl.control
 	);
