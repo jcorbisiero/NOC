@@ -36,7 +36,7 @@ endclass
 class noc_checker;	//checker class
 	
 	Constants c;	
-	
+	 
 	function check_result(int dut_data, int dut_enable, int golden_data, noc_env env, int x, int y);
 		if (dut_enable || golden_data > 0) begin
 			if (dut_data != golden_data) begin
