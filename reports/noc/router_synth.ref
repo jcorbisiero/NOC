@@ -1,0 +1,211 @@
+ 
+****************************************
+Report : reference
+Design : router
+Version: F-2011.09-SP2
+Date   : Thu Dec 20 10:41:32 2012
+****************************************
+
+Attributes:
+    b - black box (unknown)
+   bo - allows boundary optimization
+    d - dont_touch
+   mo - map_only
+    h - hierarchical
+    n - noncombinational
+    r - removable
+    s - synthetic operator
+    u - contains unmapped logic
+
+Reference          Library       Unit Area   Count    Total Area   Attributes
+-----------------------------------------------------------------------------
+AND2X1             saed90nm_typ     7.372800       2    14.745600 
+DFFSSRX1           saed90nm_typ    33.177601       4   132.710403 n
+INVX0              saed90nm_typ     5.529600       1     5.529600 
+NAND2X0            saed90nm_typ     5.529600      12    66.355202 
+NAND2X1            saed90nm_typ     5.529600      52   287.539207 
+NAND4X0            saed90nm_typ     8.294400      16   132.710403 
+NOR2X0             saed90nm_typ     5.529600       1     5.529600 
+OR3X1              saed90nm_typ     9.216000       1     9.216000 
+inputPort_0                    4348.108746       1   4348.108746  h, n
+inputPort_1                    4344.422346       1   4344.422346  h, n
+inputPort_2                    4344.422346       1   4344.422346  h, n
+inputPort_3                    4348.108746       1   4348.108746  h, n
+inputPort_4                     317.030401       1    317.030401  h, n
+outputPort_4                   4621.823949       1   4621.823949  h, n
+routeLogic_XCOORD1111_YCOORD1111_NORTH1_SOUTH1_EAST1_WEST1    58.060802       1    58.060802 h
+-----------------------------------------------------------------------------
+Total 15 references                                 23036.313351
+
+****************************************
+Design: inputPort_0 
+****************************************
+Reference          Library       Unit Area   Count    Total Area   Attributes
+-----------------------------------------------------------------------------
+AND2X1             saed90nm_typ     7.372800       3    22.118400 
+AND3X1             saed90nm_typ     8.294400       1     8.294400 
+AO22X1             saed90nm_typ    11.980800     112  1341.849564 
+AO221X1            saed90nm_typ    12.902400       5    64.512000 
+DFFX1              saed90nm_typ    24.883200      91  2264.371172 n
+INVX0              saed90nm_typ     5.529600       9    49.766401 
+MUX21X1            saed90nm_typ    11.059200       2    22.118401 
+NAND2X0            saed90nm_typ     5.529600       1     5.529600 
+NAND2X1            saed90nm_typ     5.529600      38   210.124805 
+NAND3X0            saed90nm_typ     7.372800       2    14.745600 
+NOR2X0             saed90nm_typ     5.529600      25   138.240004 
+NOR3X0             saed90nm_typ     8.294400       4    33.177601 
+NOR4X0             saed90nm_typ     9.216000       3    27.647999 
+OA21X1             saed90nm_typ     9.216000       2    18.431999 
+OA22X1             saed90nm_typ    11.059200       1    11.059200 
+OA221X1            saed90nm_typ    12.902400       6    77.414400 
+OA222X1            saed90nm_typ    14.745600       1    14.745600 
+OR4X1              saed90nm_typ    10.137600       1    10.137600 
+XNOR2X1            saed90nm_typ    13.824000       1    13.824000 
+-----------------------------------------------------------------------------
+Total 19 references                                  4348.108746
+
+****************************************
+Design: inputPort_1 
+****************************************
+Reference          Library       Unit Area   Count    Total Area   Attributes
+-----------------------------------------------------------------------------
+AND2X1             saed90nm_typ     7.372800       3    22.118400 
+AND3X1             saed90nm_typ     8.294400       2    16.588800 
+AO22X1             saed90nm_typ    11.980800     112  1341.849564 
+AO221X1            saed90nm_typ    12.902400       4    51.609600 
+AO222X1            saed90nm_typ    14.745600       1    14.745600 
+AOI21X1            saed90nm_typ    11.980800       1    11.980800 
+DFFX1              saed90nm_typ    24.883200      91  2264.371172 n
+INVX0              saed90nm_typ     5.529600       8    44.236801 
+MUX21X1            saed90nm_typ    11.059200       1    11.059200 
+NAND2X1            saed90nm_typ     5.529600      39   215.654406 
+NAND3X0            saed90nm_typ     7.372800       2    14.745600 
+NAND4X0            saed90nm_typ     8.294400       1     8.294400 
+NOR2X0             saed90nm_typ     5.529600      29   160.358404 
+NOR3X0             saed90nm_typ     8.294400       3    24.883201 
+NOR4X0             saed90nm_typ     9.216000       1     9.216000 
+OA21X1             saed90nm_typ     9.216000       2    18.431999 
+OA22X1             saed90nm_typ    11.059200       1    11.059200 
+OA221X1            saed90nm_typ    12.902400       5    64.512000 
+OAI221X1           saed90nm_typ    14.745600       1    14.745600 
+OR4X1              saed90nm_typ    10.137600       1    10.137600 
+XNOR2X1            saed90nm_typ    13.824000       1    13.824000 
+-----------------------------------------------------------------------------
+Total 21 references                                  4344.422346
+
+****************************************
+Design: inputPort_2 
+****************************************
+Reference          Library       Unit Area   Count    Total Area   Attributes
+-----------------------------------------------------------------------------
+AND2X1             saed90nm_typ     7.372800       3    22.118400 
+AND3X1             saed90nm_typ     8.294400       2    16.588800 
+AO22X1             saed90nm_typ    11.980800     112  1341.849564 
+AO221X1            saed90nm_typ    12.902400       4    51.609600 
+AO222X1            saed90nm_typ    14.745600       1    14.745600 
+AOI21X1            saed90nm_typ    11.980800       1    11.980800 
+DFFX1              saed90nm_typ    24.883200      91  2264.371172 n
+INVX0              saed90nm_typ     5.529600       8    44.236801 
+MUX21X1            saed90nm_typ    11.059200       1    11.059200 
+NAND2X1            saed90nm_typ     5.529600      39   215.654406 
+NAND3X0            saed90nm_typ     7.372800       2    14.745600 
+NAND4X0            saed90nm_typ     8.294400       1     8.294400 
+NOR2X0             saed90nm_typ     5.529600      29   160.358404 
+NOR3X0             saed90nm_typ     8.294400       3    24.883201 
+NOR4X0             saed90nm_typ     9.216000       1     9.216000 
+OA21X1             saed90nm_typ     9.216000       2    18.431999 
+OA22X1             saed90nm_typ    11.059200       1    11.059200 
+OA221X1            saed90nm_typ    12.902400       5    64.512000 
+OAI221X1           saed90nm_typ    14.745600       1    14.745600 
+OR4X1              saed90nm_typ    10.137600       1    10.137600 
+XNOR2X1            saed90nm_typ    13.824000       1    13.824000 
+-----------------------------------------------------------------------------
+Total 21 references                                  4344.422346
+
+****************************************
+Design: inputPort_3 
+****************************************
+Reference          Library       Unit Area   Count    Total Area   Attributes
+-----------------------------------------------------------------------------
+AND2X1             saed90nm_typ     7.372800       3    22.118400 
+AND3X1             saed90nm_typ     8.294400       1     8.294400 
+AO22X1             saed90nm_typ    11.980800     112  1341.849564 
+AO221X1            saed90nm_typ    12.902400       5    64.512000 
+DFFX1              saed90nm_typ    24.883200      91  2264.371172 n
+INVX0              saed90nm_typ     5.529600       9    49.766401 
+MUX21X1            saed90nm_typ    11.059200       2    22.118401 
+NAND2X0            saed90nm_typ     5.529600       1     5.529600 
+NAND2X1            saed90nm_typ     5.529600      38   210.124805 
+NAND3X0            saed90nm_typ     7.372800       2    14.745600 
+NOR2X0             saed90nm_typ     5.529600      25   138.240004 
+NOR3X0             saed90nm_typ     8.294400       4    33.177601 
+NOR4X0             saed90nm_typ     9.216000       3    27.647999 
+OA21X1             saed90nm_typ     9.216000       2    18.431999 
+OA22X1             saed90nm_typ    11.059200       1    11.059200 
+OA221X1            saed90nm_typ    12.902400       6    77.414400 
+OA222X1            saed90nm_typ    14.745600       1    14.745600 
+OR4X1              saed90nm_typ    10.137600       1    10.137600 
+XNOR2X1            saed90nm_typ    13.824000       1    13.824000 
+-----------------------------------------------------------------------------
+Total 19 references                                  4348.108746
+
+****************************************
+Design: inputPort_4 
+****************************************
+Reference          Library       Unit Area   Count    Total Area   Attributes
+-----------------------------------------------------------------------------
+DFFX1              saed90nm_typ    24.883200       5   124.415998 n
+INVX0              saed90nm_typ     5.529600       3    16.588800 
+MUX21X1            saed90nm_typ    11.059200       3    33.177601 
+NAND2X0            saed90nm_typ     5.529600       1     5.529600 
+NAND2X1            saed90nm_typ     5.529600       3    16.588800 
+NAND3X0            saed90nm_typ     7.372800       1     7.372800 
+NOR2X0             saed90nm_typ     5.529600       7    38.707201 
+OA22X1             saed90nm_typ    11.059200       2    22.118401 
+OA221X1            saed90nm_typ    12.902400       2    25.804800 
+OR2X1              saed90nm_typ     7.372800       1     7.372800 
+OR3X1              saed90nm_typ     9.216000       1     9.216000 
+OR4X1              saed90nm_typ    10.137600       1    10.137600 
+-----------------------------------------------------------------------------
+Total 12 references                                   317.030401
+
+****************************************
+Design: outputPort_4 
+****************************************
+Reference          Library       Unit Area   Count    Total Area   Attributes
+-----------------------------------------------------------------------------
+AND2X1             saed90nm_typ     7.372800       2    14.745600 
+AND3X1             saed90nm_typ     8.294400       7    58.060802 
+AO21X1             saed90nm_typ    10.137600       2    20.275200 
+AO22X1             saed90nm_typ    11.980800     112  1341.849564 
+AO221X1            saed90nm_typ    12.902400       2    25.804800 
+AOI21X1            saed90nm_typ    11.980800       2    23.961599 
+DFFX1              saed90nm_typ    24.883200      95  2363.903971 n
+INVX0              saed90nm_typ     5.529600      10    55.296001 
+MUX21X1            saed90nm_typ    11.059200       4    44.236801 
+NAND2X1            saed90nm_typ     5.529600      43   237.772806 
+NAND3X0            saed90nm_typ     7.372800       2    14.745600 
+NAND4X0            saed90nm_typ     8.294400       2    16.588800 
+NOR2X0             saed90nm_typ     5.529600      40   221.184006 
+NOR3X0             saed90nm_typ     8.294400       3    24.883201 
+NOR4X0             saed90nm_typ     9.216000       1     9.216000 
+OA21X1             saed90nm_typ     9.216000       4    36.863998 
+OA22X1             saed90nm_typ    11.059200       1    11.059200 
+OA221X1            saed90nm_typ    12.902400       6    77.414400 
+OR4X1              saed90nm_typ    10.137600       1    10.137600 
+XNOR2X1            saed90nm_typ    13.824000       1    13.824000 
+-----------------------------------------------------------------------------
+Total 20 references                                  4621.823949
+
+****************************************
+Design: routeLogic_XCOORD1111_YCOORD1111_NORTH1_SOUTH1_EAST1_WEST1 
+****************************************
+Reference          Library       Unit Area   Count    Total Area   Attributes
+-----------------------------------------------------------------------------
+INVX0              saed90nm_typ     5.529600       5    27.648001 
+NAND2X1            saed90nm_typ     5.529600       1     5.529600 
+NAND4X0            saed90nm_typ     8.294400       2    16.588800 
+NOR3X0             saed90nm_typ     8.294400       1     8.294400 
+-----------------------------------------------------------------------------
+Total 4 references                                     58.060802
+1
